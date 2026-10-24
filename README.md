@@ -47,7 +47,7 @@
 
 - **[Computer Systems Architecture](./Fifth%20semester(09.2026-now)/Computer%20Systems%20Architecture/)** — `C++` `asm` `MMX` `SSE` `SIMD` · 3 labs on vectorization
 - **[Databases](./Fifth%20semester(09.2026-now)/Databases/)** — `PostgreSQL` `Oracle` `SQL` · 6 labs + FastAPI app
-- **[Modern Application Development Platforms](./Fifth%20semester(09.2026-now)/Modern%20application%20development%20platforms/)** — `C#` `ASP.NET Core` `Blazor` `SignalR` `Keycloak` `xUnit` · 13 labs: Khalamau e-shop + PigGame multiplayer
+- **[Modern Application Development Platforms](./Fifth%20semester(09.2026-now)/Modern%20application%20development%20platforms/)** — `C#` `ASP.NET Core` `Blazor` `SignalR` `Keycloak` `xUnit` · 13 labs: e-shop + multiplayer game
 - **[Modern Web Application Development Technologies](./Fifth%20semester(09.2026-now)/Modern%20Web%20Application%20Development%20Technologies/)** — `Python` `Django` `HTML` `CSS` `JS` `React` `Node.js` `Docker` · Insurance portal 
 - **[Operating Systems and Network Programming](./Fifth%20semester(09.2026-now)/Operating%20Systems%20and%20Network%20Programming/)** — `C++` `Windows API` 
 ---
