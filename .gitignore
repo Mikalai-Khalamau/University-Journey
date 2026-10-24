@@ -1,0 +1,166 @@
+# Visual Studio / .NET
+.vs/
+*.suo
+*.user
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+[Bb]in/
+[Oo]bj/
+*.tlog
+*.lastbuildstate
+packages/
+*.nupkg
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.Python
+*.so
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# CMake / Qt
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+Testing/
+Desktop-Debug/
+.qtc/
+.qtc_clangd/
+*.pro.user
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Web libs
+wwwroot/lib/
+
+# Cursor AI / temporary
+agent-transcripts/
+canvases/
+terminals/
+mcps/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Env / Logs
+.env
+*.log
+
+# Word temporary files
+~$*
+~WRL*.tmp
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Media (large files)
+*.mp4
+*.mp3
+*.avi
+*.mov
+*.wav
+
+# User uploads in Django
+**/media/
+
+# DOS / old executables
+*.com
+*.exe
+*.dll
+*.debug
+*.list
+*.symbol
+*.~asm
+*.LST
+*.S19
+
+# Test data
+*.dat
+fuck.txt
+wedding.txt
+trains.dat
+students.txt
+LR5Test.txt
+dates.txt
+orders_db.txt
+fileIn.txt
+fileOut.txt
+Address.txt
+Leak.txt
+Thread.txt
+Undefined.txt
+
+# Compiled binaries without extension
+**/Task_1
+**/Task_2
+**/Task_3
+**/Task_4
+**/Task_5
+**/Task_6
+**/Task_7
+**/Task_8
+**/Task_9
+**/Task_10
+**/Task_11
+**/Task_12
+**/Task_13
+**/Barrels
+**/EXE
+**/ADDRESS
+**/THREAD
+**/LEAK
+**/UNDEFINED
+**/TRAIN
+**/main
+**/Functions
+**/Struct
+**/Task
+**/j
+*-fsanitize=*
+
+# Random junk folders
+**/bssdf/
+**/sjhfsjf/
+**/TASKKK/
+**/ekefewfjwke/
+**/fasefaef/
+**/wefw/
+**/Check/
+
+# MAUI build artifacts
+**/android-arm64/
+**/android-x64/
+**/assetpacks/
+**/designtime/
+**/flat/
+**/flata/
+**/lp/
+**/resizetizer/
+**/stamp/
+**/intermediatexaml/
+**/MsixContent/
+**/NpuDetect/

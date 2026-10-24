@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Calculator.CalculatorPage"
+             Title="CalculatorPage">
+
+    <Grid Padding="10" RowSpacing="5" ColumnSpacing="5">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Entry x:Name="DisplayEntry"
+               Text="0"
+               FontSize="40"
+               HorizontalTextAlignment="End"
+               IsReadOnly="True"
+               Placeholder="0"
+               BackgroundColor="LightGray"
+               Grid.Row="0"
+               Grid.Column="0"
+               Grid.ColumnSpan="5"
+               Margin="0,0,0,10"/>
+
+        <Button Text="%"  Clicked="PercentButton_Clicked" Grid.Row="1" Grid.Column="0" />
+        <Button Text="CE" Clicked="ClearEntryButton_Clicked" Grid.Row="1" Grid.Column="1" />
+        <Button Text="C"  Clicked="ClearButton_Clicked" Grid.Row="1" Grid.Column="2" />
+        <Button Text="←"  Clicked="BackspaceButton_Clicked" Grid.Row="1" Grid.Column="3" />
+
+        <Button Text="1/x" Clicked="ReciprocalButton_Clicked" Grid.Row="2" Grid.Column="0" />
+        <Button Text="x²"  Clicked="SquareButton_Clicked" Grid.Row="2" Grid.Column="1" />
+        <Button Text="√"   Clicked="SqrtButton_Clicked" Grid.Row="2" Grid.Column="2" />
+        <Button Text="÷" Clicked="OperatorButton_Clicked" Grid.Row="2" Grid.Column="3" />
+
+        <Button Text="7" Clicked="DigitButton_Clicked" Grid.Row="3" Grid.Column="0" />
+        <Button Text="8" Clicked="DigitButton_Clicked" Grid.Row="3" Grid.Column="1" />
+        <Button Text="9" Clicked="DigitButton_Clicked" Grid.Row="3" Grid.Column="2" />
+        <Button Text="×" Clicked="OperatorButton_Clicked" Grid.Row="3" Grid.Column="3" />
+ 
+        <Button Text="4" Clicked="DigitButton_Clicked" Grid.Row="4" Grid.Column="0" />
+        <Button Text="5" Clicked="DigitButton_Clicked" Grid.Row="4" Grid.Column="1" />
+        <Button Text="6" Clicked="DigitButton_Clicked" Grid.Row="4" Grid.Column="2" />
+        <Button Text="−" Clicked="OperatorButton_Clicked" Grid.Row="4" Grid.Column="3" />
+
+        <Button Text="1" Clicked="DigitButton_Clicked" Grid.Row="5" Grid.Column="0" />
+        <Button Text="2" Clicked="DigitButton_Clicked" Grid.Row="5" Grid.Column="1" />
+        <Button Text="3" Clicked="DigitButton_Clicked" Grid.Row="5" Grid.Column="2" />
+        <Button Text="+" Clicked="OperatorButton_Clicked" Grid.Row="5" Grid.Column="3" />
+
+        <Button Text="+/-" Clicked="NegateButton_Clicked" Grid.Row="6" Grid.Column="0" />
+        <Button Text="0"   Clicked="DigitButton_Clicked" Grid.Row="6" Grid.Column="1" />
+        <Button Text=","   Clicked="DecimalButton_Clicked" Grid.Row="6" Grid.Column="2" />
+        <Button Text="="   Clicked="EqualsButton_Clicked" Grid.Row="6" Grid.Column="3" />
+        <Button Text="10^x" Clicked="PowerButton_Clicked" Grid.Row="6" Grid.Column="4" />
+
+    </Grid>
+
+</ContentPage>

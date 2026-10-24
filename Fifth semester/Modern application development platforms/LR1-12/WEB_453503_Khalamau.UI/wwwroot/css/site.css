@@ -1,0 +1,27 @@
+header, footer {
+    background-color: rgba(var(--bs-dark-rgb));
+}
+
+.nav-color {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    background-color: rgb(var(--bs-dark-rgb));
+    width: 100%;
+}

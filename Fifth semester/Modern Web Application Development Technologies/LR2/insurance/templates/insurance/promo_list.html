@@ -1,0 +1,34 @@
+{% extends "insurance/base.html" %}
+{% block title %}Промокоды{% endblock %}
+{% block content %}
+<h1>Промокоды и купоны</h1>
+<h2>Действующие</h2>
+<table border="1" cellpadding="6">
+  <tr><th>Код</th><th>Скидка %</th><th>С</th><th>По</th></tr>
+  {% for p in active_promos %}
+    <tr>
+      <td>{{ p.code }}</td>
+      <td>{{ p.discount_percent }}</td>
+      <td>{{ p.valid_from|date:"d.m.Y" }}</td>
+      <td>{{ p.valid_until|date:"d.m.Y" }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4">Нет действующих промокодов.</td></tr>
+  {% endfor %}
+</table>
+<h2>В архиве</h2>
+<table border="1" cellpadding="6">
+  <tr><th>Код</th><th>Скидка %</th><th>С</th><th>По</th><th>Активен</th></tr>
+  {% for p in archived_promos %}
+    <tr>
+      <td>{{ p.code }}</td>
+      <td>{{ p.discount_percent }}</td>
+      <td>{{ p.valid_from|date:"d.m.Y" }}</td>
+      <td>{{ p.valid_until|date:"d.m.Y" }}</td>
+      <td>{% if p.is_active %}да{% else %}нет{% endif %}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">Архив пуст.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

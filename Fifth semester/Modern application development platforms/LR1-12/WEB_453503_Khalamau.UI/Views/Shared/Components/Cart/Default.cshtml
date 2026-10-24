@@ -1,0 +1,10 @@
+﻿@{
+    var totalPrice = ViewBag.TotalPrice ?? "00,0";
+    var count = ViewBag.Count ?? 0;
+}
+
+<a asp-controller="Cart" 
+   asp-action="Index" 
+   class="navbar-text nav-color text-decoration-none">
+    @totalPrice руб <i class="bi bi-cart"></i> (@count)
+</a>

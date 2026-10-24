@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4 auth">
+            <LoginDisplay />
+            <span class="text-muted">ЛР12: Blazor WASM + Keycloak</span>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>

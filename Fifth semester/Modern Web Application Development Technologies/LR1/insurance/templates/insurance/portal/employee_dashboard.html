@@ -1,0 +1,12 @@
+{% extends "insurance/base.html" %}
+{% block title %}Кабинет сотрудника{% endblock %}
+{% block content %}
+<h1>Кабинет сотрудника</h1>
+<p>Раздел для группы <code>employee</code> и суперпользователя.</p>
+<ul>
+  <li><a href="{% url 'insurance:stats-dashboard' %}">Статистика и графики</a></li>
+  <li><a href="{% url 'insurance:employee-contract-list' %}">Договоры: поиск и сортировка</a></li>
+  <li><a href="{% url 'insurance:contract-list' %}">Полный CRUD договоров</a></li>
+  <li><a href="/admin/">Админка Django</a></li>
+</ul>
+{% endblock %}

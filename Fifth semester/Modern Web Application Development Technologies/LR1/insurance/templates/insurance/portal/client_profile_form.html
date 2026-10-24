@@ -1,0 +1,11 @@
+{% extends "insurance/base.html" %}
+{% block title %}Профиль клиента{% endblock %}
+{% block content %}
+<h1>{% if object %}Редактирование профиля{% else %}Новый профиль клиента{% endif %}</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p><button type="submit">Сохранить</button>
+  <a href="{% url 'insurance:client-dashboard' %}">Отмена</a></p>
+</form>
+{% endblock %}

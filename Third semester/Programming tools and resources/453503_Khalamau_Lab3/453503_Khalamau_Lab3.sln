@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36327.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "453503_Khalamau_Lab3", "453503_Khalamau_Lab3.csproj", "{189CB515-4FA6-4703-BBCF-71182343D20C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{189CB515-4FA6-4703-BBCF-71182343D20C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189CB515-4FA6-4703-BBCF-71182343D20C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189CB515-4FA6-4703-BBCF-71182343D20C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189CB515-4FA6-4703-BBCF-71182343D20C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF3DCF90-9014-4E77-9735-0D317231EFA2}
+	EndGlobalSection
+EndGlobal

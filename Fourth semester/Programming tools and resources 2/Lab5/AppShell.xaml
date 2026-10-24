@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Lab5.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Lab5"
+    xmlns:pages="clr-namespace:Lab5.Pages"
+    Shell.FlyoutBehavior="Flyout"
+    Shell.FlyoutBackgroundColor="Transparent"
+    Shell.FlyoutWidth="200"
+    Title="Lab5">
+
+    <ShellContent
+        Title="Home"    
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="MainPage" />
+
+    <ShellContent
+        Title="Супергерои"
+        ContentTemplate="{DataTemplate pages:SuperheroesPage}"
+        Route="SuperheroesPage" />
+
+    <ShellContent
+        Title="Конвертер валют"
+        ContentTemplate="{DataTemplate pages:CurrencyConverterPage}"
+        Route="CurrencyConverterPage" />
+
+</Shell>

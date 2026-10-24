@@ -1,0 +1,130 @@
+﻿@page "/"
+@using PigGame.Client.Services
+@inject GameHubConnection HubConnection
+@inject ClientGameState GameState
+@implements IDisposable
+
+<h1>Игра "Свинья"</h1>
+
+@if (GameState.CurrentState is null)
+{
+    <div class="lobby" style="max-width: 420px;">
+        <h3>Вход в игру</h3>
+
+        @if (!HubConnection.IsConnected)
+        {
+            <p class="text-muted">Подключение к серверу...</p>
+        }
+
+        <label class="form-label">Ваше имя</label>
+        <input class="form-control" @bind="playerName" @bind:event="oninput" maxlength="20" />
+
+        <label class="form-label mt-3">Режим игры</label>
+        <select class="form-select" value="@selectedMode" @onchange="OnModeChanged">
+            <option value="@GameMode.Pig">@GameMode.Pig.DisplayName()</option>
+            <option value="@GameMode.BigPig">@GameMode.BigPig.DisplayName()</option>
+            <option value="@GameMode.Jackpot">@GameMode.Jackpot.DisplayName()</option>
+        </select>
+        <div class="form-text">@selectedMode.Description()</div>
+
+        <button class="btn btn-primary mt-3"
+                @onclick="CreateGame"
+                disabled="@(!HubConnection.IsConnected || string.IsNullOrWhiteSpace(playerName))">
+            Создать новую игру
+        </button>
+
+        <hr />
+
+        <label class="form-label">ID комнаты</label>
+        <input class="form-control" @bind="roomId" @bind:event="oninput" maxlength="6" />
+
+        <button class="btn btn-secondary mt-2"
+                @onclick="JoinGame"
+                disabled="@(!HubConnection.IsConnected || string.IsNullOrWhiteSpace(playerName) || string.IsNullOrWhiteSpace(roomId))">
+            Присоединиться
+        </button>
+
+        @if (GameState.Messages.Count > 0)
+        {
+            <div class="alert alert-info mt-3">
+                @foreach (var message in GameState.Messages)
+                {
+                    <div>@message</div>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <GameBoard State="@GameState"
+               OnRollDice="@RollDice"
+               OnHold="@Hold"
+               OnToggleReady="@ToggleReady"
+               OnSendChat="@SendChat" />
+}
+
+@code {
+    private string playerName = string.Empty;
+    private string roomId = string.Empty;
+    private GameMode selectedMode = GameMode.Pig;
+
+    protected override async Task OnInitializedAsync()
+    {
+        HubConnection.OnStateChanged += StateHasChanged;
+        HubConnection.OnMessageReceived += StateHasChanged;
+
+        await HubConnection.ConnectAsync();
+    }
+
+    private async Task CreateGame()
+    {
+        if (string.IsNullOrWhiteSpace(playerName))
+            return;
+
+        GameState.MyName = playerName.Trim();
+        await HubConnection.CreateGameAsync(GameState.MyName, selectedMode);
+    }
+
+    private void OnModeChanged(ChangeEventArgs args)
+    {
+        selectedMode = Enum.TryParse<GameMode>(args.Value?.ToString(), out var mode)
+            ? mode
+            : GameMode.Pig;
+    }
+
+    private async Task JoinGame()
+    {
+        if (string.IsNullOrWhiteSpace(playerName) || string.IsNullOrWhiteSpace(roomId))
+            return;
+
+        GameState.MyName = playerName.Trim();
+        await HubConnection.JoinGameAsync(roomId.Trim(), GameState.MyName);
+    }
+
+    private async Task RollDice()
+    {
+        await HubConnection.RollDiceAsync(GameState.CurrentGameId);
+    }
+
+    private async Task Hold()
+    {
+        await HubConnection.HoldAsync(GameState.CurrentGameId);
+    }
+
+    private async Task ToggleReady(bool isReady)
+    {
+        await HubConnection.SetReadyAsync(GameState.CurrentGameId, isReady);
+    }
+
+    private async Task SendChat(string text)
+    {
+        await HubConnection.SendChatAsync(GameState.CurrentGameId, text);
+    }
+
+    public void Dispose()
+    {
+        HubConnection.OnStateChanged -= StateHasChanged;
+        HubConnection.OnMessageReceived -= StateHasChanged;
+    }
+}

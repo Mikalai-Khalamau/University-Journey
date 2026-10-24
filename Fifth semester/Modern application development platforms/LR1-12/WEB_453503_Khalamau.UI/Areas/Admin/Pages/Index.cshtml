@@ -1,0 +1,87 @@
+﻿@page
+@model WEB_453503_Khalamau.UI.Areas.Admin.Pages.IndexModel
+
+<h4>Камни</h4>
+<hr />
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+}
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Create New
+    </a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Gem[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gem[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gem[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gem[0].Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gem[0].MimeType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Gem) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <img src="@item.Image" alt="@item.Name" style="max-width: 80px; max-height: 80px;" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MimeType)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination">
+            <li class="page-item @(Model.PageNo <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-page="./Index" asp-route-pageNo="@(Model.PageNo - 1)" aria-label="Previous">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNo ? "active" : "")">
+                    <a class="page-link" asp-page="./Index" asp-route-pageNo="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.PageNo >= Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-page="./Index" asp-route-pageNo="@(Model.PageNo + 1)" aria-label="Next">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+}

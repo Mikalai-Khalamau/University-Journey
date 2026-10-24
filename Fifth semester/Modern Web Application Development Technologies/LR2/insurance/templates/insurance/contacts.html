@@ -1,0 +1,70 @@
+{% extends "insurance/base.html" %}
+{% load static %}
+
+{% block title %}Контакты — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Контакты и наши филиалы</h1>
+  <p>Свяжитесь с нашими специалистами или посетите ближайший филиал компании.</p>
+
+  <section>
+    <h2>Руководство и ключевые сотрудники</h2>
+    <div class="contacts-team">
+      {% for c in contacts %}
+        <div class="contact-card">
+          <figure class="contact-figure">
+            <img class="contact-photo" src="{% static 'insurance/images/contact.svg' %}" alt="{{ c.full_name }}" width="100" height="100">
+            <figcaption>
+              <strong>{{ c.full_name }}</strong><br>
+              <em>{{ c.role_title }}</em><br>
+              <small class="contact-bio">{{ c.bio }}</small>
+            </figcaption>
+          </figure>
+          <address class="contact-address">
+            Тел: <a href="tel:{{ c.phone }}">{{ c.phone }}</a><br>
+            Email: <a href="mailto:{{ c.email }}">{{ c.email }}</a>
+          </address>
+        </div>
+      {% empty %}
+        <p>Список сотрудников формируется.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="block-gap">
+    <h2>Наши филиалы и график работы</h2>
+    <table class="tbl contacts-table">
+      <colgroup><col class="col-code"><col><col><col class="col-total"></colgroup>
+      <caption>Расписание работы филиалов</caption>
+      <thead>
+        <tr>
+          <th id="th-branch" scope="col">Филиал / Город</th>
+          <th id="th-address" scope="col">Адрес</th>
+          <th id="th-phone" scope="col">Телефон</th>
+          <th id="th-hours" scope="col">Режим работы</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th id="row-1" headers="th-branch" scope="row">Главный офис (Минск)</th>
+          <td headers="th-address row-1">пр. Независимости, 4</td>
+          <td headers="th-phone row-1"><a href="tel:+375172000000">+375 (17) 200-00-00</a></td>
+          <td headers="th-hours row-1">Пн-Пт: 9:00 - 19:00</td>
+        </tr>
+        <tr>
+          <th id="row-2" headers="th-branch" scope="row">Гродненский филиал</th>
+          <td headers="th-address row-2">ул. Советская, 15</td>
+          <td headers="th-phone row-2"><a href="tel:+375152332211">+375 (15) 233-22-11</a></td>
+          <td headers="th-hours row-2">Пн-Пт: 9:00 - 18:00</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="block-gap">
+    <h2>Карта проезда к главному офису</h2>
+    <iframe class="map-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2350.55!2d27.555!3d53.900!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTPCsDU0JzAwLjAiTiAyN8KwMzMnMTguMCJF!5e0!3m2!1sru!2sby!4v1600000000000" allowfullscreen="" loading="lazy"></iframe>
+  </section>
+</article>
+{% endblock %}

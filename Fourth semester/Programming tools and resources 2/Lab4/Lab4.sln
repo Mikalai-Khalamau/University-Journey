@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36327.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab4", "Lab4\Lab4.csproj", "{D4275709-75A9-4415-82A0-BA120E0103FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khalamau_Lab4", "Khalamau_Lab4\Khalamau_Lab4.csproj", "{64A39B22-11DE-4CBC-9BAE-FF758E20F3F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab4Maui", "Lab4Maui\Lab4Maui.csproj", "{132A7C7A-282C-4B53-8D03-2C0307EB2947}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4275709-75A9-4415-82A0-BA120E0103FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4275709-75A9-4415-82A0-BA120E0103FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4275709-75A9-4415-82A0-BA120E0103FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4275709-75A9-4415-82A0-BA120E0103FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64A39B22-11DE-4CBC-9BAE-FF758E20F3F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64A39B22-11DE-4CBC-9BAE-FF758E20F3F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64A39B22-11DE-4CBC-9BAE-FF758E20F3F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64A39B22-11DE-4CBC-9BAE-FF758E20F3F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{132A7C7A-282C-4B53-8D03-2C0307EB2947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{132A7C7A-282C-4B53-8D03-2C0307EB2947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{132A7C7A-282C-4B53-8D03-2C0307EB2947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{132A7C7A-282C-4B53-8D03-2C0307EB2947}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {077C64B0-0A8A-4A57-8C4F-CFD8DD0F5CB2}
+	EndGlobalSection
+EndGlobal

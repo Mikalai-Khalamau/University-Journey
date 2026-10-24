@@ -1,0 +1,64 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Отзывы клиентов — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Отзывы наших клиентов</h1>
+  <p>Мнения и оценки клиентов о качестве обслуживания и урегулирования убытков.</p>
+
+  <section style="margin-bottom: 30px;">
+    {% if user.is_authenticated %}
+      <details style="background: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #ced4da;">
+        <summary style="cursor: pointer; font-weight: bold; font-size: 1.1em; color: #0056b3; outline: none;">
+          ✍️ Добавить отзыв
+        </summary>
+        <form method="post" action="{% url 'insurance:review-add' %}" style="margin-top: 15px;">
+          {% csrf_token %}
+          <p>
+            <label for="review-text">Ваш отзыв:</label><br>
+            <textarea id="review-text" name="text" required minlength="10" rows="4" cols="50" placeholder="Напишите ваш отзыв (минимум 10 символов)..." style="width: 100%; max-width: 500px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+          </p>
+          <p>
+            <label>Оценка (от 1 до 5 звёзд):</label><br>
+            <input type="radio" id="r1" name="rating" value="1"> <label for="r1">1 ★</label>
+            <input type="radio" id="r2" name="rating" value="2"> <label for="r2">2 ★★</label>
+            <input type="radio" id="r3" name="rating" value="3"> <label for="r3">3 ★★★</label>
+            <input type="radio" id="r4" name="rating" value="4"> <label for="r4">4 ★★★★</label>
+            <input type="radio" id="r5" name="rating" value="5" checked> <label for="r5">5 ★★★★★</label>
+          </p>
+          <button type="submit" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Отправить</button>
+        </form>
+      </details>
+    {% else %}
+      <p>
+        <a href="{% url 'login' %}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">Добавить отзыв</a> 
+        <small style="margin-left: 10px; color: #666;">(требуется <a href="{% url 'login' %}">вход</a> или <a href="{% url 'insurance:register' %}">регистрация</a>)</small>
+      </p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h2>Все отзывы</h2>
+    {% for r in reviews %}
+      <article style="border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;">
+        <h3>
+          {% if r.user %}{{ r.user.username }}{% else %}{{ r.guest_name|default:"Анонимный клиент" }}{% endif %}
+          <span style="color: gold;">
+            {% if r.rating == 1 %}★☆☆☆☆
+            {% elif r.rating == 2 %}★★☆☆☆
+            {% elif r.rating == 3 %}★★★☆☆
+            {% elif r.rating == 4 %}★★★★☆
+            {% elif r.rating == 5 %}★★★★★
+            {% endif %}
+          </span>
+        </h3>
+        <p><time datetime="{{ r.created_at|date:'Y-m-d' }}"><small>{{ r.created_at|date:"d/m/Y H:i" }}</small></time></p>
+        <p>{{ r.text }}</p>
+      </article>
+    {% empty %}
+      <p>Отзывов пока нет. Будьте первыми!</p>
+    {% endfor %}
+  </section>
+</article>
+{% endblock %}

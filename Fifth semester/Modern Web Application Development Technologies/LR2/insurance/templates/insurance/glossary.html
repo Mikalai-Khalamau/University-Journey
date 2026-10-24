@@ -1,0 +1,45 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Словарь терминов и FAQ — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Словарь терминов и часто задаваемые вопросы (FAQ)</h1>
+  <p>Здесь вы найдете определения ключевых понятий страхования (<dfn>страховой полис</dfn>, <dfn>франшиза</dfn>) и ответы на популярные вопросы.</p>
+
+  <section class="faq-list">
+    <h2>Часто задаваемые вопросы</h2>
+    {% for entry in faq_entries %}
+      <details class="faq-item">
+        <summary class="faq-q">
+          {{ entry.question }}
+          <small class="faq-q-date">Добавлено: <time datetime="{{ entry.created_at|date:'Y-m-d' }}">{{ entry.created_at|date:"d/m/Y" }}</time></small>
+        </summary>
+        <p class="faq-short">
+          <strong>Краткий ответ:</strong> {{ entry.answer|truncatechars:90 }}
+        </p>
+        <div class="faq-full">
+          <p><strong>Развернутый ответ:</strong></p>
+          <p>{{ entry.answer }}</p>
+        </div>
+      </details>
+    {% empty %}
+      <p>Вопросы пока не добавлены.</p>
+    {% endfor %}
+  </section>
+
+  <section class="terms-block">
+    <h2>Основные термины</h2>
+    <dl class="terms-list">
+      <dt><dfn>Франшиза</dfn></dt>
+      <dd>Часть убытка, которая не возмещается страховой компанией при наступлении страхового случая.</dd>
+
+      <dt><dfn>Страховая премия</dfn></dt>
+      <dd>Плата за страхование, которую страхователь обязан уплатить страховщику.</dd>
+
+      <dt><abbr title="Обязательное страхование гражданской ответственности владельцев транспортных средств">ОСАГО</abbr></dt>
+      <dd>Обязательный вид страхования ответственности водителей перед третьими лицами.</dd>
+    </dl>
+  </section>
+</article>
+{% endblock %}

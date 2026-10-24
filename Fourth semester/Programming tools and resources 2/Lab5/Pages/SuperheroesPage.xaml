@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Lab5.Pages.SuperheroesPage"
+             Title="Супергерои и способности">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Label Text="Выберите супергероя:" 
+               FontSize="18" 
+               FontAttributes="Bold" />
+
+        <Picker x:Name="HeroPicker" 
+                Title="Супергерой"
+                SelectedIndexChanged="HeroPicker_SelectedIndexChanged" />
+
+        <Label Text="Способности:" 
+               FontSize="18" 
+               FontAttributes="Bold" 
+               />
+
+        <CollectionView x:Name="PowersCollection" 
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="LightGray" 
+                           Padding="10" 
+                           Margin="0,5">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding Description}" 
+                                   FontSize="14" 
+                                   TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

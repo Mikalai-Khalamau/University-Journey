@@ -1,0 +1,66 @@
+@using PigGame.Shared.Models
+
+<div class="chat-panel">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">Чат комнаты</h5>
+        <span class="badge bg-light text-dark">@Messages.Count</span>
+    </div>
+
+    <div class="chat-messages">
+        @if (Messages.Count == 0)
+        {
+            <div class="text-muted small">Сообщений пока нет.</div>
+        }
+
+        @foreach (var message in Messages.Reverse())
+        {
+            <div class="chat-message">
+                <div class="d-flex justify-content-between align-items-baseline gap-2">
+                    <strong class="chat-author">@message.PlayerName</strong>
+                    <small class="text-muted">@message.SentAt.ToLocalTime().ToString("HH:mm")</small>
+                </div>
+                <div class="chat-text">@message.Text</div>
+            </div>
+        }
+    </div>
+
+    <div class="input-group mt-2">
+        <input class="form-control"
+               @bind="text"
+               @bind:event="oninput"
+               @onkeydown="HandleKeyDown"
+               maxlength="300"
+               placeholder="Сообщение..." />
+        <button class="btn btn-primary"
+                @onclick="Send"
+                disabled="@(string.IsNullOrWhiteSpace(text))">
+            Отправить
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<ChatMessage> Messages { get; set; } = Array.Empty<ChatMessage>();
+
+    [Parameter]
+    public EventCallback<string> OnSend { get; set; }
+
+    private string text = string.Empty;
+
+    private async Task Send()
+    {
+        var message = text.Trim();
+        if (message.Length == 0)
+            return;
+
+        await OnSend.InvokeAsync(message);
+        text = string.Empty;
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+            await Send();
+    }
+}

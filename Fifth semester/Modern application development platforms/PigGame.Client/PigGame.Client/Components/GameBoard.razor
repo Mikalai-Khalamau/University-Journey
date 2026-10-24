@@ -1,0 +1,234 @@
+﻿@using PigGame.Client.Services
+@using PigGame.Shared.Models
+
+@* Требование: отрисовка игрового поля в отдельном компоненте *@
+
+@if (State.CurrentState is { } game)
+{
+    <div class="game-board">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+            <div>
+                <h3 class="mb-0">
+                    Игровое поле
+                    <span class="text-muted fs-6">комната @game.GameId</span>
+                </h3>
+                <div class="text-muted small mt-1">
+                    <strong>@game.Mode.DisplayName()</strong> — @game.Mode.Description()
+                </div>
+            </div>
+            <span class="badge @PhaseBadgeClass(game.Phase)">@PhaseLabel(game.Phase)</span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                @if (game.Phase == GamePhase.Finished)
+                {
+                    <div class="alert alert-success">
+                        <h4 class="alert-heading mb-1">Победил: @game.WinnerName</h4>
+                        <div>Игра завершена. Обновите страницу, чтобы начать новую.</div>
+                        @if (game.Mode == GameMode.Jackpot && game.WinnerPrize > 0)
+                        {
+                            <div class="mt-1">Победитель забирает кон: <strong>@game.WinnerPrize</strong></div>
+                        }
+                    </div>
+                }
+                else if (game.Phase == GamePhase.Waiting)
+                {
+                    <div class="alert alert-info">
+                        <div class="fw-semibold mb-1">Лобби</div>
+                        @if (game.Players.Count < GameState.MinPlayers)
+                        {
+                            <div>
+                                Нужно ещё @(GameState.MinPlayers - game.Players.Count) игрок(а).
+                                ID комнаты: <code>@game.GameId</code>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>Все в сборе. Нажмите «Я готов», когда будете готовы начать.</div>
+                        }
+                    </div>
+                }
+
+                @if (game.Mode == GameMode.Jackpot && game.Phase == GamePhase.Playing)
+                {
+                    <div class="alert alert-warning py-2">
+                        Кон: <strong>@game.Pot</strong>
+                        <span class="small text-muted">
+                            — каждая единица добавляет по @GameState.JackpotContribution очку с каждого игрока
+                        </span>
+                    </div>
+                }
+
+                <div class="players">
+                    @for (var i = 0; i < game.Players.Count; i++)
+                    {
+                        var player = game.Players[i];
+                        var isCurrent = game.Phase == GamePhase.Playing && i == game.CurrentPlayerIndex;
+                        var percent = Math.Min(100, player.TotalScore * 100 / GameState.WinScore);
+
+                        <div class="player-card mb-2 p-3"
+                             style="border: @(isCurrent ? "2px solid #0d6efd" : "1px solid #adb5bd"); border-radius: 8px;">
+                            <div class="d-flex justify-content-between align-items-start gap-2">
+                                <div>
+                                    <strong>@player.Name</strong>
+                                    @if (player.ConnectionId == State.MyConnectionId)
+                                    {
+                                        <span class="text-muted">(вы)</span>
+                                    }
+                                    @if (isCurrent)
+                                    {
+                                        <span class="badge bg-primary ms-1">ходит</span>
+                                    }
+                                    @if (game.Phase == GamePhase.Waiting)
+                                    {
+                                        <span class="badge @(player.IsReady ? "bg-success" : "bg-secondary") ms-1">
+                                            @(player.IsReady ? "готов" : "не готов")
+                                        </span>
+                                    }
+                                </div>
+                                <div class="text-end">
+                                    <span class="fs-5 fw-semibold">@player.TotalScore</span>
+                                    <span class="text-muted">/ @GameState.WinScore</span>
+                                </div>
+                            </div>
+
+                            <div class="progress mt-2"
+                                 role="progressbar"
+                                 aria-valuenow="@player.TotalScore"
+                                 aria-valuemin="0"
+                                 aria-valuemax="@GameState.WinScore"
+                                 style="height: 10px;">
+                                <div class="progress-bar @(isCurrent ? "bg-primary" : "bg-success")"
+                                     style="width: @(percent)%;"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @if (game.Phase == GamePhase.Waiting && Me is { } me)
+                {
+                    <button class="btn @(me.IsReady ? "btn-outline-secondary" : "btn-success")"
+                            @onclick="ToggleReady">
+                        @(me.IsReady ? "Отменить готовность" : "Я готов")
+                    </button>
+                }
+
+                @if (game.Phase == GamePhase.Playing)
+                {
+                    <div class="turn-info mt-4">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-5 text-center">
+                                @if (game.RollNumber > 0)
+                                {
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <Dice @key="game.RollNumber" Value="@game.LastDiceRoll" />
+                                        @if (game.UsesTwoDice)
+                                        {
+                                            <Dice @key="game.RollNumber + 1000" Value="@game.SecondDiceRoll" />
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-muted small">
+                                        @(game.UsesTwoDice ? "Кости ещё не брошены" : "Кубик ещё не брошен")
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-7">
+                                <p class="mb-1">Последний бросок: <strong>@RollText(game)</strong></p>
+                                <p class="mb-1">Очки за текущий ход (можно потерять): <strong>@game.TurnScore</strong></p>
+                                <p class="mb-0">
+                                    @if (State.IsMyTurn)
+                                    {
+                                        <span class="text-success fw-semibold">Ваш ход.</span>
+                                    }
+                                    else if (game.CurrentPlayer is { } current)
+                                    {
+                                        <span>Ходит: @current.Name</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="controls mt-3">
+                            <button class="btn btn-primary me-2"
+                                    @onclick="OnRollDice"
+                                    disabled="@(!State.IsMyTurn)">
+                                @(game.UsesTwoDice ? "Бросить кости" : "Бросить кость")
+                            </button>
+                            <button class="btn btn-success"
+                                    @onclick="OnHold"
+                                    disabled="@(!State.IsMyTurn || game.TurnScore == 0)">
+                                Забрать очки
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <div class="log mt-4">
+                    <h5>Лог событий</h5>
+                    @if (State.Messages.Count == 0)
+                    {
+                        <p class="text-muted mb-0">Событий пока нет.</p>
+                    }
+                    @foreach (var message in State.Messages)
+                    {
+                        <p class="mb-1 small">@message</p>
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <ChatPanel Messages="@State.ChatMessages" OnSend="@OnSendChat" />
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Ожидание начала игры...</p>
+}
+
+@code {
+    [Parameter]
+    public ClientGameState State { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnRollDice { get; set; }
+
+    [Parameter]
+    public EventCallback OnHold { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnToggleReady { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSendChat { get; set; }
+
+    private Player? Me =>
+        State.CurrentState?.Players.FirstOrDefault(p => p.ConnectionId == State.MyConnectionId);
+
+    private Task ToggleReady() =>
+        Me is { } me ? OnToggleReady.InvokeAsync(!me.IsReady) : Task.CompletedTask;
+
+    private static string RollText(GameState game) =>
+        game.UsesTwoDice
+            ? $"{game.LastDiceRoll}-{game.SecondDiceRoll}"
+            : game.LastDiceRoll.ToString();
+
+    private static string PhaseLabel(GamePhase phase) => phase switch
+    {
+        GamePhase.Waiting => "лобби",
+        GamePhase.Playing => "игра",
+        _ => "завершена"
+    };
+
+    private static string PhaseBadgeClass(GamePhase phase) => phase switch
+    {
+        GamePhase.Waiting => "bg-secondary",
+        GamePhase.Playing => "bg-primary",
+        _ => "bg-success"
+    };
+}

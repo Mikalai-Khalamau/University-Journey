@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Collections.HousingOffice">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAQAAAAgACAgAAAAAAAABAgAAQAAAAAAAAACIAA=</HashCode>
+      <FileName>HousingOffice.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="listResident" />
+      <Property Name="listTariff" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Collections.Resident">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAABAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Resident.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="UsedTariffs" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Collections.Tariff">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAKAAAEAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Tariff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Collections.ResidentType">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Resident.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

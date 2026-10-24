@@ -1,0 +1,74 @@
+{% extends "insurance/base.html" %}
+{% load static insurance_extras %}
+
+{% block title %}Главная страница — Страховая фирма{% endblock %}
+
+{% block content %}
+<section id="banner-section">
+  <figure>
+    <picture>
+      <source media="(max-width: 600px)" srcset="{% static 'insurance/images/banner_1.jpg' %}">
+      <source media="(max-width: 1024px)" srcset="{% static 'insurance/images/banner_2.jpg' %}">
+      <img src="{% static 'insurance/images/banner_3.jpg' %}" alt="Баннер акции страхования" style="max-width: 100%; height: auto;">
+    </picture>
+    <figcaption>
+      <h2>Надежное страхование для каждого клиента! <mark>Скидка 15%</mark> по промокодам в этом месяце.</h2>
+    </figcaption>
+  </figure>
+</section>
+
+<section id="services-catalog">
+  <h2>Каталог видов страхования</h2>
+  {% if insurance_types %}
+    <div class="services-grid">
+      {% for it in insurance_types %}
+        <article class="service-card" style="border: 1px solid #ccc; padding: 15px; margin: 10px; display: inline-block; width: 280px; vertical-align: top;">
+          <h3>{{ it.name }}</h3>
+          <p>Тарифная ставка: <strong>{{ it.tariff_rate }}</strong></p>
+          <p>Комиссия агента: {{ it.agent_commission_percent }}%</p>
+          <p><a href="{% url 'insurance:insurancetype-detail' it.pk %}">Подробнее</a></p>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Виды страхования пока не добавлены.</p>
+  {% endif %}
+</section>
+
+<section id="latest-news">
+  <h2>Последняя новость</h2>
+  {% if latest_news %}
+    <article>
+      <h3>{{ latest_news.title }}</h3>
+      <p><time datetime="{{ latest_news.published_at|date:'Y-m-d' }}">{{ latest_news.published_at|date:"d/m/Y" }}</time></p>
+      <figure>
+        <img src="{% picture_src latest_news.image_url 'insurance/images/news_1.svg' %}" alt="{{ latest_news.title }}" width="300" height="150">
+        <figcaption>{{ latest_news.summary }}</figcaption>
+      </figure>
+      <p><a href="{% url 'insurance:news-list' %}">Все новости</a></p>
+    </article>
+  {% else %}
+    <p>Новостей пока нет.</p>
+  {% endif %}
+</section>
+
+<section id="partners-section">
+  <h2>Наши партнёры</h2>
+  {% if partners %}
+    <ul>
+      {% for partner in partners %}
+        <li>
+          <figure style="display: inline-block; margin: 10px; text-align: center;">
+            <img src="{% picture_src partner.logo 'insurance/images/news_2.svg' %}" alt="{{ partner.name }}" width="100" height="50">
+            <figcaption>
+              <a href="{{ partner.website_url }}" target="_blank" rel="noopener noreferrer">{{ partner.name }}</a>
+            </figcaption>
+          </figure>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Информация о партнёрах обновляется.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Промокоды и акции — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Действующие промокоды и скидки</h1>
+  <p>Используйте специальные промокоды при оформлении полисов для получения скидок.</p>
+
+  <section>
+    <h2>Активные промокоды</h2>
+    {% if active_promos %}
+      <table class="tbl promo-active">
+        <colgroup><col class="col-code"><col class="col-price"><col><col></colgroup>
+        <caption>Актуальные скидки и купоны</caption>
+        <thead>
+          <tr>
+            <th scope="col">Промокод</th>
+            <th scope="col">Скидка (%)</th>
+            <th scope="col">Срок действия</th>
+            <th scope="col">Условия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in active_promos %}
+            <tr class="promo-hit">
+              <td><code>{{ p.code }}</code></td>
+              <td class="promo-value">{{ p.discount_percent }}%</td>
+              <td><time datetime="{{ p.valid_until|date:'Y-m-d' }}">до {{ p.valid_until|date:"d/m/Y" }}</time></td>
+              <td>Действует на все виды страхования при оформлении онлайн.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>В данный момент активных промокодов нет.</p>
+    {% endif %}
+  </section>
+
+  <section class="block-gap">
+    <h2>Архив промокодов</h2>
+    {% if archived_promos %}
+      <table class="tbl promo-archive">
+        <colgroup><col class="col-code"><col class="col-price"><col></colgroup>
+        <caption>Архивные (просроченные) промокоды</caption>
+        <thead>
+          <tr>
+            <th scope="col">Промокод</th>
+            <th scope="col">Скидка (%)</th>
+            <th scope="col">Срок действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in archived_promos %}
+            <tr>
+              <td><del>{{ p.code }}</del></td>
+              <td><del>{{ p.discount_percent }}%</del></td>
+              <td><time datetime="{{ p.valid_until|date:'Y-m-d' }}">истёк {{ p.valid_until|date:"d/m/Y" }}</time></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Архив пуст.</p>
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "insurance/base.html" %}
+{% block title %}Праздники {{ year }}{% endblock %}
+{% block content %}
+<h1>Праздники {{ country }} — {{ year }}</h1>
+<p>Источник: внешний API <strong>Nager.Date</strong> (ЛР5).</p>
+<p>
+  <a href="{% url 'insurance:api-holidays' year %}?country={{ country }}">Тот же список в JSON</a>
+  | <a href="{% url 'insurance:holidays-page' 2026 %}">2026</a>
+  | <a href="{% url 'insurance:holidays-page' 2025 %}">2025</a>
+</p>
+{% if error %}
+  <p style="color:red;">{{ error }}</p>
+{% endif %}
+{% if holidays %}
+<table border="1" cellpadding="8">
+  <tr><th>Дата</th><th>Название</th></tr>
+  {% for h in holidays %}
+  <tr>
+    <td>{{ h.date }}</td>
+    <td>{{ h.name }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<p>Всего: {{ holidays|length }}</p>
+{% else %}
+  <p>Нет данных за выбранный год.</p>
+{% endif %}
+{% endblock %}

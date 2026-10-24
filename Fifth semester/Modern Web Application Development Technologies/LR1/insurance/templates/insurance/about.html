@@ -1,0 +1,187 @@
+{% extends "insurance/base.html" %}
+{% load static %}
+
+{% block title %}О компании — Страховая фирма{% endblock %}
+
+{% block content %}
+<article id="top">
+  <h1>О компании «Гарант»</h1>
+
+  <nav aria-label="Разделы страницы «О компании»">
+    <ul>
+      <li><a href="#history">История и логотип</a></li>
+      <li><a href="#years">Развитие по годам</a></li>
+      <li><a href="#video">Презентационный видеоролик</a></li>
+      <li><a href="#audio">Аудиогид</a></li>
+      <li><a href="#requisites">Реквизиты</a></li>
+      <li><a href="#certificate">Свидетельство</a></li>
+      <li><a href="#motto">Наш девиз</a></li>
+      <li><a href="#table-demo">Таблица с headers и rowspan/colspan</a></li>
+      <li><a href="#code-listing">Листинг кода (pre+code)</a></li>
+    </ul>
+  </nav>
+
+  <section id="history">
+    <h2>Наша история и логотип</h2>
+    <div>
+      <figure style="margin: 0 0 15px 0;">
+        <img src="{% static 'insurance/images/logo.jpg' %}" alt="Логотип компании Гарант" width="150" height="150" style="border-radius: 8px; border: 1px solid #ddd;">
+        <figcaption><small>Фирменный знак качества</small></figcaption>
+      </figure>
+
+      {% if company %}
+        <div>{{ company.about_text|linebreaks }}</div>
+      {% else %}
+        <p>Страховая компания «Гарант» основана в 2010 году и является лидером рынка финансовых услуг.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section id="years" style="margin-top: 20px;">
+    <h2>История развития по годам</h2>
+    <dl>
+      <dt><strong>2010 год</strong></dt>
+      <dd>Основание компании в Минске и получение первой лицензии на страховую деятельность.</dd>
+
+      <dt><strong>2015 год</strong></dt>
+      <dd>Открытие 10 региональных филиалов по всей республике.</dd>
+
+      <dt><strong>2020 год</strong></dt>
+      <dd>Запуск цифрового портала клиентов и онлайн-оформления полисов КАСКО и ОСАГО.</dd>
+
+      <dt><strong>2026 год</strong></dt>
+      <dd>Более 100 000 активных клиентов и высший рейтинг надежности.</dd>
+    </dl>
+  </section>
+
+  <section id="video">
+    <h2>Презентационный видеоролик</h2>
+    <video controls width="600" height="340" poster="{% static 'insurance/images/logo.jpg' %}">
+      <source src="{% static 'insurance/presentation.mp4' %}" type="video/mp4">
+      Ваш браузер не поддерживает тег video.
+    </video>
+  </section>
+
+  <section id="audio">
+    <h2>Аудиогид по компании</h2>
+    <audio controls>
+      <source src="{% static 'insurance/audio.mp3' %}" type="audio/mpeg">
+      Ваш браузер не поддерживает элемент audio.
+    </audio>
+  </section>
+
+  <section id="requisites">
+    <h2>Реквизиты компании</h2>
+    <address>
+      Юридический адрес: г. Минск, пр. Независимости, д. 4, пом. 1Н<br>
+      Телефон горячей линии: <a href="tel:+375172000000">+375 (17) 200-00-00</a>
+    </address>
+
+    {% if company and company.requisites.exists %}
+      <table border="1" style="border-collapse: collapse; margin-top: 10px; padding: 8px;">
+        <caption>Таблица реквизитов</caption>
+        <thead>
+          <tr><th scope="col">Поле</th><th scope="col">Значение</th></tr>
+        </thead>
+        <tbody>
+          {% for row in company.requisites.all %}
+            <tr><th scope="row">{{ row.label }}</th><td>{{ row.value }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>УНП: 191234567 | ОКПО: 37482910 | Р/С: BY30OLMP30120000123450000333 в ОАО «Приорбанк»</p>
+    {% endif %}
+  </section>
+
+  <section id="poetry">
+    <h2>Четверостишия: фиксированный и потенциальный перенос строк</h2>
+
+    <p>
+      <strong>Первое четверостишие (фиксированный перенос, &lt;br&gt;):</strong><br>
+      Белеет парус одинокий<br>
+      В тумане моря голубом!<br>
+      Что ищет он в стране далекой?<br>
+      Что кинул он в краю родном?
+    </p>
+
+    <p>
+      <strong>Второе четверостишие (потенциальный перенос, &lt;wbr&gt;):</strong><br>
+      Буря мглою<wbr> небо кроет,<br>
+      Вихри снежные<wbr> крутя;<br>
+      То, как зверь,<wbr> она завоет,<br>
+      То заплачет<wbr>, как дитя.
+    </p>
+  </section>
+
+  <section id="certificate">
+    <h2>Свидетельство и официальная выдержка</h2>
+    <pre>
+СВИДЕТЕЛЬСТВО О ГОСУДАРСТВЕННОЙ РЕГИСТРАЦИИ
+Выдано Минским горисполкомом 12.05.2010 г.
+Регистрационный номер: 191234567.
+Компания внесена в Единый государственный реестр страховых организаций.
+    </pre>
+
+    <blockquote>
+      <p>«Безопасность и уверенность каждого клиента — главный приоритет нашей профессиональной деятельности.»</p>
+      <cite>— Из Устава Закрытого акционерного страхового общества «Гарант»</cite>
+    </blockquote>
+  </section>
+
+  <section id="motto">
+    <h2>Наш девиз</h2>
+    <p>
+      Когда штормит на жизненном просторе,<br>
+      Когда высокорисков<wbr>анный путь впереди,<br>
+      «Гарант» развеет тревоги и горе,<br>
+      С полисом нашим спокойно идти!
+    </p>
+  </section>
+
+  <section id="table-demo">
+    <h2>Таблица</h2>
+    <table border="1" style="border-collapse: collapse; width: 100%; text-align: left; padding: 6px;">
+      <caption>Тарифная сетка страховых услуг (Демонстрация атрибутов таблиц)</caption>
+      <thead>
+        <tr>
+          <th id="th-service" scope="col">Вид услуги</th>
+          <th id="th-base" scope="col">Базовая ставка</th>
+          <th id="th-coeff" scope="col">Коэффициент риска</th>
+          <th id="th-total" scope="col">Итоговая стоимость</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th id="row-kasko" scope="row">КАСКО (Авто)</th>
+          <td headers="th-base row-kasko">120 BYN</td>
+          <td headers="th-coeff row-kasko">1.5</td>
+          <td headers="th-total row-kasko">180 BYN</td>
+        </tr>
+        <tr>
+          <th id="row-osago" scope="row" rowspan="2">ОСАГО (Обязательное)</th>
+          <td headers="th-base row-osago" colspan="2">Фиксированный тариф для легковых авто</td>
+          <td headers="th-total row-osago">90 BYN</td>
+        </tr>
+        <tr>
+          <td headers="th-base" colspan="2">Льготный тариф для электромобилей</td>
+          <td headers="th-total">60 BYN</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="code-listing">
+    <h2>Пример листинга программного кода (Pre + Code)</h2>
+    <pre><code>
+# Пример Python-функции расчета страховой премии
+def calculate_insurance_premium(base_rate, risk_coefficient):
+    &quot;&quot;&quot;Рассчитывает итоговую стоимость полиса.&quot;&quot;&quot;
+    total = base_rate * risk_coefficient
+    return round(total, 2)
+    </code></pre>
+  </section>
+
+  <p><a href="#top">↑ Наверх страницы</a></p>
+</article>
+{% endblock %}

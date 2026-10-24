@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fractal Platform</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .fractal-fields[hidden] { display: none !important; }
+    .fractal-fields:not([hidden]) { display: block; }
+
+    .transform-item {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .transform-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .remove-transform {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 0 4px;
+    }
+    .remove-transform:hover { color: #f87171; }
+
+    /* === Теги === */
+    .tag-input-wrapper {
+      position: relative;
+      margin-top: 8px;
+    }
+    .tag-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+    .tag-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .tag-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-top: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .tag-suggestions.show { display: block; }
+    .tag-suggestion {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+    .tag-suggestion:hover, .tag-suggestion.active {
+      background: var(--primary);
+      color: #fff;
+    }
+    .tag-suggestion.add-new {
+      border-top: 1px solid var(--line);
+      font-style: italic;
+      color: var(--muted);
+    }
+    .tag-suggestion.add-new:hover {
+      background: var(--success);
+      color: #fff;
+    }
+    .selected-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+      min-height: 24px;
+    }
+    .selected-tag {
+      background: var(--primary);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      animation: tagPop 0.2s ease;
+    }
+    @keyframes tagPop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .selected-tag .remove {
+      cursor: pointer;
+      opacity: 0.8;
+      font-weight: bold;
+      margin-left: 2px;
+    }
+    .selected-tag .remove:hover { opacity: 1; }
+    .tag-hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .stat-card { background: var(--bg); padding: 8px; border-radius: 6px; text-align: center; }
+    .stat-value { font-size: 18px; font-weight: 600; color: var(--primary); }
+    .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div id="notifications-container" style="position: fixed; top: 20px; right: 20px; z-index: 999; max-width: 400px; display: flex; flex-direction: column; gap: 12px;"></div>
+
+  <header class="topbar">
+    <h1>Fractal Platform</h1>
+    <div class="auth-controls">
+      <span id="user-display" class="user-info hidden"><span id="username"></span></span>
+      <button id="logout-btn" class="secondary hidden">Выйти</button>
+      <button id="show-auth-btn" class="primary">Войти / Регистрация</button>
+    </div>
+  </header>
+
+  <dialog id="auth-modal" class="modal">
+    <form id="auth-form" class="auth-form" autocomplete="off">
+      <h3>Вход / Регистрация</h3>
+      <label>Логин
+        <input required name="username" minlength="3" pattern="[A-Za-z0-9_]{3,}" placeholder="мин. 3 символа">
+      </label>
+      <label>Пароль
+        <input required type="password" name="password" minlength="4" placeholder="буква + цифра + спецсимвол">
+      </label>
+      <label>Подтверждение пароля
+        <input required type="password" name="confirm_password" minlength="4">
+      </label>
+      <label>Email (опционально)
+        <input type="email" name="email" placeholder="user@example.com">
+      </label>
+      <div class="modal-actions" style="margin-top: 16px; display: flex; gap: 8px;">
+        <button type="button" id="register-btn" class="primary">Регистрация</button>
+        <button type="button" id="login-btn" class="secondary">Войти</button>
+        <button type="button" id="close-auth" class="ghost" style="display: none;">Отмена</button>
+      </div>
+      <p id="auth-msg" class="msg" style="margin-top: 12px; min-height: 20px;"></p>
+    </form>
+    <div id="current-user" class="meta" style="margin-top: 12px;">Не авторизован</div>
+  </dialog>
+
+  <main class="layout">
+    <section class="panel params-panel">
+      <h2>Параметры генерации</h2>
+      <form id="generate-form">
+        <label>Название
+          <input name="name" placeholder="Мой фрактал #1">
+        </label>
+
+        <label>Теги
+          <div class="tag-input-wrapper">
+            <input type="text" id="tag-input" class="tag-input" placeholder="Введите тег и нажмите Enter..." maxlength="32">
+            <div id="tag-suggestions" class="tag-suggestions"></div>
+          </div>
+          <div id="selected-tags" class="selected-tags"></div>
+          <div class="tag-hint">Нажмите Enter для добавления, кликните на предложение. Тег "favorite" помечает как избранное.</div>
+        </label>
+
+        <label>Тип фрактала
+          <select id="fractal_type" name="fractal_type">
+            <option value="mandelbrot">Mandelbrot</option>
+            <option value="julia">Julia</option>
+            <option value="burning_ship">Burning Ship</option>
+            <option value="ifs">IFS Flame</option>
+          </select>
+        </label>
+
+        <div class="grid-2">
+          <label>Ширина <input type="number" name="width" value="1024" min="256" max="2048"></label>
+          <label>Высота <input type="number" name="height" value="768" min="256" max="2048"></label>
+        </div>
+        <div class="grid-2">
+          <label>Итерации <input type="number" name="max_iter" value="300" min="50" max="5000"></label>
+          <label>Gamma <input type="number" step="0.1" name="gamma" value="2.2" min="0.5" max="5"></label>
+        </div>
+
+        <details id="stats-details" style="margin-top: 16px; background: var(--panel); border-radius: 8px; padding: 12px;">
+          <summary style="cursor: pointer; font-weight: 600;">Моя статистика</summary>
+          <div id="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 12px;">
+            <div class="stat-card"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Сгенерировано</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-fav">—</div><div class="stat-label">Любимый тип</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-avg">0с</div><div class="stat-label">Среднее время</div></div>
+            <div class="stat-card"><div class="stat-value" id="stat-total-time">0с</div><div class="stat-label">Общее время</div></div>
+          </div>
+        </details>
+
+        <div id="mandelbrot-fields" class="fractal-fields">
+          <details open>
+            <summary>Параметры Mandelbrot</summary>
+            <div class="grid-3">
+              <label>center_x <input type="number" step="0.01" name="center_x" value="-0.5"></label>
+              <label>center_y <input type="number" step="0.01" name="center_y" value="0.0"></label>
+              <label>scale <input type="number" step="0.01" name="scale" value="3.0"></label>
+            </div>
+          </details>
+        </div>
+
+        <div id="julia-fields" class="fractal-fields" hidden>
+          <details open>
+            <summary>Параметры Julia</summary>
+            <div class="grid-3">
+              <label>center_x <input type="number" step="0.01" name="center_x" value="0.0"></label>
+              <label>center_y <input type="number" step="0.01" name="center_y" value="0.0"></label>
+              <label>scale <input type="number" step="0.01" name="scale" value="3.0"></label>
+            </div>
+            <div class="grid-2" style="margin-top: 8px;">
+              <label>c_re <input type="number" step="0.001" name="c_re" value="-0.7"></label>
+              <label>c_im <input type="number" step="0.001" name="c_im" value="0.27015"></label>
+            </div>
+          </details>
+        </div>
+
+        <div id="burning-ship-fields" class="fractal-fields" hidden>
+          <details open>
+            <summary>Параметры Burning Ship</summary>
+            <div class="grid-3">
+              <label>center_x <input type="number" step="0.01" name="center_x" value="-0.5"></label>
+              <label>center_y <input type="number" step="0.01" name="center_y" value="-0.5"></label>
+              <label>scale <input type="number" step="0.01" name="scale" value="3.0"></label>
+            </div>
+          </details>
+        </div>
+
+        <div id="ifs-fields" class="fractal-fields" hidden>
+          <details open>
+            <summary>Параметры IFS Flame</summary>
+            <label class="preset-mode-field">Пресет
+              <select id="ifs-preset" name="preset_name">
+                <option value="fern" selected>Fern</option>
+                <option value="spiral">Spiral</option>
+                <option value="heart_flame">Heart Flame</option>
+                <option value="fisheye_grid">Fisheye Grid</option>
+                <option value="custom">Кастомные настройки...</option>
+              </select>
+            </label>
+            <label class="preset-mode-field">Вариация
+              <select id="ifs-variation" name="variation_name">
+                <option value="linear">Linear</option>
+                <option value="sinusoidal">Sinusoidal</option>
+                <option value="swirl" selected>Swirl</option>
+                <option value="heart">Heart</option>
+                <option value="fisheye">Fisheye</option>
+                <option value="spherical">Spherical</option>
+                <option value="horseshoe">Horseshoe</option>
+                <option value="polar">Polar</option>
+                <option value="handkerchief">Handkerchief</option>
+                <option value="disc">Disc</option>
+                <option value="tangent">Tangent</option>
+                <option value="cross">Cross</option>
+              </select>
+            </label>
+            <div class="grid-2">
+              <label>seed <input type="number" name="seed" value="42"></label>
+              <label>samples <input type="number" name="samples" value="300000" min="50000"></label>
+            </div>
+            <details id="custom-params" hidden style="margin-top: 16px; border-top: 1px solid #374151; padding-top: 12px;">
+              <summary>Кастомные трансформации</summary>
+              <p class="meta" style="margin: 8px 0 12px; font-size: 0.9em;">
+                Аффинные трансформации: <code>x' = a·x + b·y + e</code>, <code>y' = c·x + d·y + f</code><br>
+                Weight определяет вероятность выбора трансформации.
+              </p>
+              <div id="transforms-container" class="transforms-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
+              <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" id="add-transform" class="secondary">+ Добавить трансформацию</button>
+                <button type="button" id="load-preset" class="ghost">Загрузить из пресета</button>
+              </div>
+            </details>
+          </details>
+        </div>
+
+        <button type="submit" class="generate-btn">Сгенерировать</button>
+      </form>
+      <div id="task-box" class="task-box hidden"></div>
+    </section>
+
+    <section class="panel result-panel">
+      <div class="result-header">
+        <h2>Результат</h2>
+        <a href="/api/fractals/collection" class="collection-link">Моя коллекция →</a>
+      </div>
+      <div id="result-container" class="result-container">
+        <img id="result-img" class="result-img hidden" alt="Сгенерированный фрактал">
+        <p id="result-placeholder" class="placeholder">Изображение появится здесь после генерации</p>
+      </div>
+      <hr>
+      <div class="collection-preview">
+        <h3>Последние в коллекции</h3>
+        <div id="mini-gallery" class="mini-gallery"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/app.js?v=20260603"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+@inject IDataService DataService
+@implements IDisposable
+
+@if (DataService.TotalPages > 1)
+{
+    <nav class="mt-4" aria-label="Навигация по страницам: @CategoryName">
+        <ul class="pagination justify-content-center">
+            @for (var pageNumber = 1; pageNumber <= DataService.TotalPages; pageNumber++)
+            {
+                var page = pageNumber;
+                <li class="page-item @(DataService.CurrentPage == page ? "active" : "")">
+                    <button class="page-link" @onclick="() => GoToPage(page)">@(page)</button>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+
+@code {
+    [Parameter]
+    public string? CategoryName { get; set; }
+
+    protected override void OnInitialized()
+    {
+        DataService.DataLoaded += OnDataLoaded;
+    }
+
+    private void OnDataLoaded()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private async Task GoToPage(int pageNo)
+    {
+        await DataService.GetProductListAsync(pageNo);
+    }
+
+    public void Dispose()
+    {
+        DataService.DataLoaded -= OnDataLoaded;
+    }
+}

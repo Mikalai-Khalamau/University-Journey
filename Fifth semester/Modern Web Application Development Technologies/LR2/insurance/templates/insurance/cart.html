@@ -1,0 +1,62 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Корзина заказа — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Корзина заказа страховых полисов</h1>
+  <p>Проверьте выбранные услуги, при необходимости измените количество или перейдите к оплате.</p>
+
+  {% if cart_items %}
+    <table class="tbl cart-table">
+      <colgroup><col><col><col><col class="col-price"><col class="col-total"><col></colgroup>
+      <caption>Список выбранных страховых продуктов</caption>
+      <thead>
+        <tr>
+          <th id="th-num" scope="col">№</th>
+          <th id="th-name" scope="col">Наименование услуги</th>
+          <th id="th-qty" scope="col">Количество</th>
+          <th id="th-price" scope="col">Цена за ед. (BYN)</th>
+          <th id="th-total" scope="col">Итого (BYN)</th>
+          <th id="th-action" scope="col">Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ci in cart_items %}
+          <tr>
+            <td id="row-{{ forloop.counter }}" headers="th-num" scope="row">{{ forloop.counter }}</td>
+            <td headers="th-name row-{{ forloop.counter }}"><strong>{{ ci.item.name }}</strong></td>
+            <td headers="th-qty row-{{ forloop.counter }}">
+              <form class="inline-form" method="get" action="{% url 'insurance:cart' %}">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="item_id" value="{{ ci.item_id }}">
+                <input class="qty-input" type="number" name="qty" value="{{ ci.qty }}" min="1" max="10">
+                <button type="submit">Изменить</button>
+              </form>
+            </td>
+            <td headers="th-price row-{{ forloop.counter }}">{{ ci.price }}</td>
+            <td headers="th-total row-{{ forloop.counter }}"><strong>{{ ci.subtotal }}</strong></td>
+            <td>
+              <a href="{% url 'insurance:cart' %}?action=remove&item_id={{ ci.item_id }}">Удалить</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" class="cart-total-label"><strong>Итого к оплате:</strong></td>
+          <td colspan="2" class="cart-total-value"><strong>{{ cart_total }} BYN</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <p class="actions-row">
+      <a href="{% url 'insurance:insurancetype-list' %}">← Продолжить выбор услуг</a> |
+      <a class="btn btn-primary" href="{% url 'insurance:checkout' %}">Перейти к оплате →</a>
+    </p>
+  {% else %}
+    <p>Ваша корзина пуста.</p>
+    <p><a href="{% url 'insurance:insurancetype-list' %}">Перейти к каталогу услуг</a></p>
+  {% endif %}
+</article>
+{% endblock %}

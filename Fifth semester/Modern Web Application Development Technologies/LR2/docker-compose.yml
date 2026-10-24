@@ -1,0 +1,37 @@
+# Local stack: Django (Gunicorn) + PostgreSQL.
+# Run: docker compose up --build
+# App: http://localhost:8000/   (create superuser: docker compose exec web python manage.py createsuperuser)
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: insurance
+      POSTGRES_PASSWORD: insurance
+      POSTGRES_DB: insurance
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U insurance -d insurance"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_USER: insurance
+      POSTGRES_PASSWORD: insurance
+      POSTGRES_DB: insurance
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-docker-compose-change-me}
+      DJANGO_DEBUG: "false"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,web,[::1]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

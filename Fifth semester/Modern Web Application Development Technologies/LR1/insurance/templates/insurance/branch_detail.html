@@ -1,0 +1,42 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>{{ branch.name }}</h1>
+<p><strong>Адрес:</strong> {{ branch.address }}</p>
+<p><strong>Город:</strong> {{ branch.city }}</p>
+<p><strong>Телефон:</strong> {{ branch.phone }}</p>
+<p>
+  {% if show_crm_tools %}
+    <a href="{% url 'insurance:branch-update' branch.pk %}">Изменить</a>
+    <a href="{% url 'insurance:branch-delete' branch.pk %}">Удалить</a>
+  {% endif %}
+  <a href="{% url 'insurance:branch-list' %}">К списку</a>
+</p>
+{% if user.is_authenticated and branch_weather %}
+<section>
+  <h2>Погода в городе филиала (Nominatim + Open-Meteo)</h2>
+  {% if branch_weather.ok %}
+    <p>Координаты: {{ branch_weather.lat }}, {{ branch_weather.lon }}</p>
+    {% if branch_weather.weather_live %}
+      <p>Температура: {{ branch_weather.weather.temperature_c }} °C,
+         влажность: {{ branch_weather.weather.humidity_pct }}%,
+         ветер: {{ branch_weather.weather.wind_kmh }} км/ч</p>
+    {% else %}
+      <p>Координаты определены, но <strong>Open-Meteo</strong> сейчас недоступен (нет сети или таймаут).
+         Для защиты достаточно показать работу геокодирования и JSON ниже.</p>
+    {% endif %}
+  {% else %}
+    <p>Не удалось определить координаты для города «{{ branch.city }}» ({{ branch_weather.error }}).</p>
+  {% endif %}
+  <p><small>JSON погоды: <a href="{% url 'insurance:api-branch-weather' branch.pk %}">/api/branch/{{ branch.pk }}/weather/</a></small></p>
+</section>
+{% elif not user.is_authenticated %}
+<p><em>Погода и внешние API: <a href="{% url 'login' %}?next={{ request.path }}">войдите</a>, затем обновите страницу.</em></p>
+{% endif %}
+{% if user.is_authenticated %}
+<section>
+  <h2>Праздники (Nager.Date)</h2>
+  <p><a href="{% url 'insurance:holidays-page' 2026 %}">Список праздников Беларуси 2026</a>
+     | <a href="{% url 'insurance:api-holidays' 2026 %}">JSON 2026</a></p>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "insurance/base.html" %}
+{% block title %}Договоры (сотрудник){% endblock %}
+{% block content %}
+<h1>Договоры</h1>
+<form method="get" action="">
+  <label>Поиск (клиент, филиал, тип): <input type="search" name="q" value="{{ request.GET.q }}"></label>
+  <label>Сортировка:
+    <select name="sort">
+      <option value="signed_date_desc" {% if request.GET.sort == 'signed_date_desc' or not request.GET.sort %}selected{% endif %}>Дата ↓</option>
+      <option value="signed_date_asc" {% if request.GET.sort == 'signed_date_asc' %}selected{% endif %}>Дата ↑</option>
+      <option value="amount_desc" {% if request.GET.sort == 'amount_desc' %}selected{% endif %}>Сумма ↓</option>
+      <option value="amount_asc" {% if request.GET.sort == 'amount_asc' %}selected{% endif %}>Сумма ↑</option>
+    </select>
+  </label>
+  <button type="submit">Применить</button>
+</form>
+<table border="1" cellpadding="6" style="margin-top:1rem;">
+  <tr>
+    <th>#</th><th>Дата</th><th>Клиент</th><th>Тип</th><th>Сумма</th><th>Филиал</th>
+  </tr>
+  {% for c in contracts %}
+  <tr>
+    <td><a href="{% url 'insurance:contract-detail' c.pk %}">{{ c.pk }}</a></td>
+    <td>{{ c.signed_date }}</td>
+    <td>{{ c.client.full_name }}</td>
+    <td>{{ c.insurance_type.name }}</td>
+    <td>{{ c.insurance_amount }}</td>
+    <td>{{ c.branch.name }}</td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6">Ничего не найдено.</td></tr>
+  {% endfor %}
+</table>
+{% if is_paginated %}
+<nav>
+  <p>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</p>
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q|urlencode }}&sort={{ request.GET.sort|urlencode }}">Назад</a>
+  {% endif %}
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q|urlencode }}&sort={{ request.GET.sort|urlencode }}">Вперёд</a>
+  {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>Агенты</h1>
+<p><a href="{% url 'insurance:agent-create' %}">Добавить</a></p>
+<table border="1" cellpadding="6" class="js-filter-table">
+  <thead><tr><th>ФИО</th><th>Филиал</th><th>Телефон</th><th></th></tr></thead>
+  <tbody>
+  {% for a in agents %}
+  <tr>
+    <td><a href="{% url 'insurance:agent-detail' a.pk %}">{{ a.last_name }} {{ a.first_name }}</a></td>
+    <td>{{ a.branch.name }}</td>
+    <td>{{ a.phone }}</td>
+    <td>
+      <a href="{% url 'insurance:agent-update' a.pk %}">Изменить</a>
+      <a href="{% url 'insurance:agent-delete' a.pk %}">Удалить</a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="4">Нет записей.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% include "insurance/_pagination.html" %}
+{% endblock %}

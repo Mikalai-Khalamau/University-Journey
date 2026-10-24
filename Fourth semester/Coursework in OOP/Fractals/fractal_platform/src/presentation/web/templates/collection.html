@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Моя коллекция — Fractal Platform</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .fractal-card {
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid var(--line, #374151);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .fractal-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      background: #0b1220;
+      cursor: pointer;
+    }
+    .card-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed var(--line, #374151);
+      color: var(--text, #e5e7eb);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 2px 4px;
+    }
+    .card-title input:focus {
+      outline: none;
+      border-bottom-color: var(--primary, #6366f1);
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .tag-chip {
+      background: var(--primary, #6366f1);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tag-chip.favorite { background: #f59e0b; }
+    .tag-chip.basic { background: var(--line, #374151); color: var(--muted, #9ca3af); cursor: default; }
+    .tag-chip .remove-tag {
+      margin-left: 4px;
+      opacity: 0.7;
+      font-weight: bold;
+    }
+    .tag-chip .remove-tag:hover { opacity: 1; }
+
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .card-actions button {
+      padding: 6px 10px;
+      font-size: 12px;
+      width: auto;
+      flex: 1;
+      min-width: 70px;
+    }
+    .meta { font-size: 12px; color: var(--muted, #9ca3af); }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted, #9ca3af);
+    }
+
+    .tag-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--line, #374151);
+      margin-bottom: 20px;
+    }
+    .filter-chip {
+      background: var(--panel, #1f2937);
+      border: 1px solid var(--line, #374151);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .filter-chip:hover, .filter-chip.active {
+      background: var(--primary, #6366f1);
+      border-color: var(--primary, #6366f1);
+      color: #fff;
+    }
+    .filter-chip.all { background: var(--line, #374151); }
+    .filter-chip.all.active { background: var(--success, #10b981); }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-overlay.show {
+      display: flex !important;
+    }
+    .modal-box {
+      background: var(--panel, #1f2937);
+      border: 1px solid var(--line, #374151);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line, #374151);
+    }
+    .modal-title { font-weight: 600; font-size: 18px; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--muted, #9ca3af);
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .modal-close:hover { color: var(--text, #e5e7eb); }
+
+    .tag-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .tag-input-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--line, #374151);
+      border-radius: 6px;
+      background: var(--bg, #111827);
+      color: var(--text, #e5e7eb);
+      font-size: 14px;
+    }
+    .tag-input-row input::placeholder { color: var(--muted, #9ca3af); }
+
+    .selected-tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+      min-height: 28px;
+    }
+    .selected-tag-item {
+      background: var(--primary, #6366f1);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .selected-tag-item .remove {
+      cursor: pointer;
+      opacity: 0.85;
+      font-weight: bold;
+      margin-left: 2px;
+    }
+    .selected-tag-item .remove:hover { opacity: 1; }
+
+    .available-tags-title {
+      font-size: 12px;
+      color: var(--muted, #9ca3af);
+      margin: 8px 0 8px;
+    }
+    .available-tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .available-tag-item {
+      background: var(--line, #374151);
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .available-tag-item:hover, .available-tag-item.added {
+      background: var(--primary, #6366f1);
+      color: #fff;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      padding-top: 12px;
+      border-top: 1px solid var(--line, #374151);
+    }
+
+    /* Адаптив */
+    @media (max-width: 600px) {
+      .collection-grid { grid-template-columns: 1fr; padding: 12px; }
+      .tag-filter { padding: 0 12px 16px; }
+      .modal-box { max-width: 100%; margin: 0 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1><a href="/" style="color: inherit; text-decoration: none;">Fractal Platform</a></h1>
+    <div class="auth-controls">
+      <span id="user-display" class="user-info hidden"><span id="username"></span></span>
+      <button id="logout-btn" class="secondary hidden">Выйти</button>
+    </div>
+  </header>
+
+  <main class="panel" style="max-width: 1400px; margin: 20px auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin: 0;">Моя коллекция</h2>
+      <a href="/" class="collection-link" style="font-size: 14px;">← Назад к генерации</a>
+    </div>
+
+    <div id="tag-filter" class="tag-filter">
+      <span class="filter-chip all active" data-filter="all">Все</span>
+      <span class="filter-chip" data-filter="favorite">Избранное</span>
+    </div>
+
+    <div id="collection-grid" class="collection-grid">
+      <p class="empty-state">Загрузка коллекции...</p>
+    </div>
+  </main>
+
+  <div id="tag-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">Редактировать теги</span>
+        <button class="modal-close" id="tag-modal-close" aria-label="Закрыть">&times;</button>
+      </div>
+
+      <div class="tag-input-row">
+        <input type="text" id="new-tag-input" placeholder="Введите новый тег..." maxlength="32">
+        <button class="primary" id="add-tag-btn" style="padding: 8px 16px;">+</button>
+      </div>
+
+      <div id="selected-tags-list" class="selected-tags-list"></div>
+
+      <div class="available-tags-title">Доступные теги:</div>
+      <div id="available-tags-list" class="available-tags-list"></div>
+
+      <div class="modal-footer">
+        <button class="secondary" id="tag-modal-cancel">Отмена</button>
+        <button class="primary" id="tag-modal-save">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+
+    const state = {
+      auth: null,
+      allFractals: [],
+      userTags: [],
+      activeFilter: 'all',
+      editingFractalId: null,
+      editingTags: []
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        state.auth = JSON.parse(localStorage.getItem('fractal_auth') || 'null');
+      } catch (e) {
+        state.auth = null;
+      }
+
+      updateAuthUI();
+
+      const logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) {
+        logoutBtn.onclick = () => {
+          localStorage.removeItem('fractal_auth');
+          window.location.href = '/';
+        };
+      }
+
+      bindModalEvents();
+
+      bindFilterEvents();
+
+      if (state.auth?.token) {
+        await loadUserTags();
+        await loadCollection();
+      } else {
+        document.getElementById('collection-grid').innerHTML =
+          "<p class='empty-state'><a href='/'>Войдите</a> для просмотра коллекции</p>";
+      }
+    });
+
+    async function apiCall(endpoint, options = {}) {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...(options.headers || {})
+      };
+      if (state.auth?.token) {
+        headers['Authorization'] = `Bearer ${state.auth.token}`;
+      }
+
+      const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+
+      try {
+        const response = await fetch(url, {
+          ...options,
+          headers
+        });
+
+        const text = await response.text();
+
+        if (!response.ok) {
+          let errorMsg = `HTTP ${response.status}`;
+          try {
+            const json = JSON.parse(text);
+            errorMsg = json.detail || json.message || errorMsg;
+          } catch {}
+          throw new Error(errorMsg);
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        return contentType.includes('application/json') ? JSON.parse(text) : text;
+
+      } catch (err) {
+        console.error(`API ${endpoint}:`, err);
+        throw err;
+      }
+    }
+
+    function updateAuthUI() {
+      const userDisplay = document.getElementById('user-display');
+      const usernameEl = document.getElementById('username');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      if (state.auth?.user?.username) {
+        if (usernameEl) usernameEl.textContent = state.auth.user.username;
+        if (userDisplay) userDisplay.classList.remove('hidden');
+        if (logoutBtn) logoutBtn.classList.remove('hidden');
+      } else {
+        if (userDisplay) userDisplay.classList.add('hidden');
+        if (logoutBtn) logoutBtn.classList.add('hidden');
+      }
+    }
+
+    async function loadUserTags() {
+      try {
+        const data = await apiCall('/fractals/tags');
+        console.log('Загружены теги:', data);
+        state.userTags = (data.tags || []).filter(t => t && t !== 'basic');
+        renderTagFilter();
+      } catch (err) {
+        console.warn('Не удалось загрузить теги:', err.message);
+        state.userTags = [];
+      }
+    }
+
+    function renderTagFilter() {
+      const container = document.getElementById('tag-filter');
+      if (!container) return;
+
+      const staticChips = Array.from(container.querySelectorAll('.filter-chip.all, .filter-chip[data-filter="favorite"]'));
+
+      container.innerHTML = '';
+      staticChips.forEach(chip => container.appendChild(chip));
+
+      state.userTags.forEach(tag => {
+        if (!tag || tag === 'basic') return;
+        const chip = document.createElement('span');
+        chip.className = 'filter-chip' + (state.activeFilter === tag ? ' active' : '');
+        chip.dataset.filter = tag;
+        chip.textContent = tag;
+        chip.onclick = () => applyFilter(tag);
+        container.appendChild(chip);
+      });
+    }
+
+    function bindFilterEvents() {
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.onclick = () => applyFilter(chip.dataset.filter);
+      });
+    }
+
+    function applyFilter(filter) {
+      state.activeFilter = filter;
+
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      const activeChip = document.querySelector(`.filter-chip[data-filter="${filter}"]`) ||
+                         document.querySelector('.filter-chip.all');
+      if (activeChip) activeChip.classList.add('active');
+
+      renderCollection(state.allFractals);
+    }
+
+    function filterFractals(fractals) {
+      if (state.activeFilter === 'all') return fractals;
+      if (state.activeFilter === 'favorite') {
+        return fractals.filter(f => (f.tags || []).includes('favorite'));
+      }
+      return fractals.filter(f => (f.tags || []).includes(state.activeFilter));
+    }
+
+    async function loadCollection() {
+      const grid = document.getElementById('collection-grid');
+      if (!grid) return;
+
+      grid.innerHTML = '<p class="empty-state">Загрузка...</p>';
+
+      try {
+        const fractals = await apiCall('/fractals');
+        console.log('Загружено фракталов:', fractals?.length || 0);
+
+        if (fractals?.[0]) {
+          console.log('Пример тега:', fractals[0].name, fractals[0].tags);
+        }
+
+        state.allFractals = fractals || [];
+        renderCollection(state.allFractals);
+
+      } catch (err) {
+        grid.innerHTML = `<p class="empty-state error">${err.message}</p>`;
+      }
+    }
+
+    function renderCollection(fractals) {
+      const grid = document.getElementById('collection-grid');
+      if (!grid) return;
+
+      const filtered = filterFractals(fractals);
+      grid.innerHTML = '';
+
+      if (!filtered?.length) {
+        let msg = 'Коллекция пуста';
+        if (state.activeFilter === 'favorite') msg = 'Нет избранных фракталов';
+        else if (state.activeFilter !== 'all') msg = `Нет фракталов с тегом "${state.activeFilter}"`;
+
+        grid.innerHTML = `<p class='empty-state'>${msg}. <a href='/'>Сгенерируйте первый!</a></p>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const tags = item.tags || ['basic'];
+        console.log(`Фрактал "${item.name}": теги =`, tags);
+
+        const tagsHtml = tags.map(tag => {
+          const isFav = tag === 'favorite';
+          const isBasic = tag === 'basic';
+          const classes = ['tag-chip'];
+          if (isFav) classes.push('favorite');
+          if (isBasic) classes.push('basic');
+
+          const removeBtn = !isBasic
+            ? `<span class="remove-tag" onclick="event.stopPropagation(); openTagModal('${item.id}')">×</span>`
+            : '';
+
+          return `<span class="${classes.join(' ')}" data-tag="${tag}"
+                   onclick="event.stopPropagation(); applyFilter('${tag}')">
+                   ${isFav ? '' : ''}${tag}${removeBtn}
+                 </span>`;
+        }).join('');
+
+        const card = document.createElement('div');
+        card.className = 'fractal-card';
+        card.innerHTML = `
+          <img src="/api/fractals/${item.id}/image?t=${Date.now()}"
+               alt="${item.name || item.fractal_type}"
+               onclick="window.open('/api/fractals/${item.id}/image', '_blank')">
+          <div class="card-body">
+            <div class="card-title">
+              <input type="text" value="${item.name || 'Без названия'}"
+                     data-id="${item.id}" class="fractal-name-input">
+            </div>
+            <div class="card-tags">${tagsHtml}</div>
+            <div class="meta">${item.fractal_type} • ${item.width}×${item.height} • ${new Date(item.created_at).toLocaleDateString()}</div>
+            <div class="card-actions">
+              <button class="secondary btn-rename" data-id="${item.id}">Имя</button>
+              <button class="secondary btn-edit-tags" data-id="${item.id}">Теги</button>
+              <button class="danger btn-delete" data-id="${item.id}"></button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      bindCardEvents(grid);
+    }
+
+    function bindCardEvents(grid) {
+      grid.querySelectorAll('.btn-rename').forEach(btn => {
+        btn.onclick = async (e) => {
+          const id = e.target.dataset.id;
+          const input = grid.querySelector(`.fractal-name-input[data-id="${id}"]`);
+          const newName = input?.value?.trim();
+          if (!newName) return;
+
+          try {
+            await apiCall(`/fractals/${id}`, {
+              method: 'PUT',
+              body: JSON.stringify({ name: newName })
+            });
+            showToast('Имя обновлено');
+            loadCollection();
+          } catch (err) {
+            showToast(`${err.message}`, 'error');
+          }
+        };
+      });
+
+      grid.querySelectorAll('.btn-edit-tags').forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          openTagModal(e.target.dataset.id);
+        };
+      });
+
+      grid.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.onclick = async (e) => {
+          const id = e.target.dataset.id;
+          if (!confirm('Удалить этот фрактал?')) return;
+
+          try {
+            await apiCall(`/fractals/${id}`, { method: 'DELETE' });
+            showToast('Удалено');
+            loadCollection();
+          } catch (err) {
+            showToast(`${err.message}`, 'error');
+          }
+        };
+      });
+    }
+
+    function openTagModal(fractalId) {
+      const fractal = state.allFractals.find(f => f.id === fractalId);
+      if (!fractal) {
+        console.error('Фрактал не найден:', fractalId);
+        return;
+      }
+
+      state.editingFractalId = fractalId;
+      state.editingTags = [...(fractal.tags || ['basic'])];
+      if (!state.editingTags.includes('basic')) state.editingTags.push('basic');
+
+      renderModalTags();
+      document.getElementById('tag-modal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTagModal() {
+      document.getElementById('tag-modal').classList.remove('show');
+      document.body.style.overflow = '';
+      state.editingFractalId = null;
+      state.editingTags = [];
+    }
+
+    function renderModalTags() {
+      const selectedList = document.getElementById('selected-tags-list');
+      const availableList = document.getElementById('available-tags-list');
+
+      selectedList.innerHTML = '';
+      state.editingTags.forEach(tag => {
+        const el = document.createElement('span');
+        el.className = 'selected-tag-item';
+        el.innerHTML = `${tag}${tag !== 'basic' ? `<span class="remove" data-tag="${tag}">×</span>` : ''}`;
+        if (tag !== 'basic') {
+          el.querySelector('.remove').onclick = () => {
+            state.editingTags = state.editingTags.filter(t => t !== tag);
+            renderModalTags();
+          };
+        }
+        selectedList.appendChild(el);
+      });
+
+      availableList.innerHTML = '';
+      state.userTags
+        .filter(t => t && t !== 'basic' && !state.editingTags.includes(t))
+        .forEach(tag => {
+          const el = document.createElement('span');
+          el.className = 'available-tag-item';
+          el.textContent = tag;
+          el.onclick = () => {
+            if (!state.editingTags.includes(tag)) {
+              state.editingTags.push(tag);
+              renderModalTags();
+            }
+          };
+          availableList.appendChild(el);
+        });
+    }
+
+    function bindModalEvents() {
+      document.getElementById('tag-modal-close').onclick = closeTagModal;
+      document.getElementById('tag-modal-cancel').onclick = closeTagModal;
+      document.getElementById('tag-modal').onclick = (e) => {
+        if (e.target.id === 'tag-modal') closeTagModal();
+      };
+
+      document.getElementById('tag-modal-save').onclick = saveTags;
+
+      const addBtn = document.getElementById('add-tag-btn');
+      const newInput = document.getElementById('new-tag-input');
+
+      addBtn.onclick = () => {
+        const val = newInput.value.trim().toLowerCase();
+        if (!val || val.length > 32) return;
+        if (!state.editingTags.includes(val)) {
+          state.editingTags.push(val);
+          if (!state.userTags.includes(val)) {
+            state.userTags.push(val);
+            renderTagFilter();
+          }
+          newInput.value = '';
+          renderModalTags();
+        }
+      };
+
+      newInput.onkeypress = (e) => {
+        if (e.key === 'Enter') addBtn.click();
+      };
+    }
+
+    async function saveTags() {
+      if (!state.editingFractalId) return;
+
+      const tags = state.editingTags.filter(t => t);
+      if (!tags.length || (tags.length === 1 && tags[0] === 'basic')) {
+        showToast('Должен быть хотя бы один тег', 'error');
+        return;
+      }
+
+      try {
+        await apiCall(`/fractals/${state.editingFractalId}/tags`, {
+          method: 'PUT',
+          body: JSON.stringify({ tags })
+        });
+        showToast('Теги сохранены');
+        closeTagModal();
+        loadCollection();
+      } catch (err) {
+        showToast(`${err.message}`, 'error');
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        background: ${type === 'error' ? '#ef4444' : '#10b981'};
+        color: #fff;
+        font-size: 14px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.2s ease;
+      `;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.2s';
+        setTimeout(() => toast.remove(), 200);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

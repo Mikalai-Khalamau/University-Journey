@@ -1,0 +1,42 @@
+﻿@model ListModel<Gem>
+@{
+    ViewData["Title"] = "Каталог драгоценных камней";
+}
+
+<h2 class="mb-4">Каталог драгоценных камней</h2>
+
+<!-- Выбор типа камня (Dropdown) -->
+<div class="row mb-4">
+    <div class="col-3">
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @ViewBag.CurrentTypeName
+            </button>
+            <ul class="dropdown-menu w-100">
+                <li>
+                    <a class="dropdown-item @(string.IsNullOrEmpty(ViewBag.CurrentType) ? "active" : "")" 
+                       asp-controller="Gem" asp-action="Index" asp-route-type="">
+                        Все камни
+                    </a>
+                </li>
+                @if (ViewBag.GemTypes != null)
+                {
+                    foreach (var type in (List<GemType>)ViewBag.GemTypes)
+                    {
+                        <li>
+                            <a class="dropdown-item @(ViewBag.CurrentType == type.NormalizedName ? "active" : "")" 
+                               asp-controller="Gem" asp-action="Index" 
+                               asp-route-type="@type.NormalizedName" asp-route-pageNo="1">
+                                 @type.Name
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="list-block">
+    <partial name="_ListPartial" model="Model" />
+</div>

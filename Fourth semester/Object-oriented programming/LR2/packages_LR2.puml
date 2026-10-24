@@ -1,0 +1,92 @@
+@startuml packages_LR2
+set namespaceSeparator none
+package "LR2" as LR2 {
+}
+package "LR2.AcademicRank" as LR2.AcademicRank {
+}
+package "LR2.AcademyBuilding" as LR2.AcademyBuilding {
+}
+package "LR2.Building" as LR2.Building {
+}
+package "LR2.Department" as LR2.Department {
+}
+package "LR2.Discipline" as LR2.Discipline {
+}
+package "LR2.Dormitory" as LR2.Dormitory {
+}
+package "LR2.Faculty" as LR2.Faculty {
+}
+package "LR2.Group" as LR2.Group {
+}
+package "LR2.Person" as LR2.Person {
+}
+package "LR2.Rectorate" as LR2.Rectorate {
+}
+package "LR2.ResidencePlace" as LR2.ResidencePlace {
+}
+package "LR2.Speciality" as LR2.Speciality {
+}
+package "LR2.Staff" as LR2.Staff {
+}
+package "LR2.Student" as LR2.Student {
+}
+package "LR2.Teacher" as LR2.Teacher {
+}
+package "LR2.University" as LR2.University {
+}
+package "LR2.main" as LR2.main {
+}
+LR2.AcademyBuilding --> LR2.Building
+LR2.AcademyBuilding --> LR2.Department
+LR2.AcademyBuilding --> LR2.Staff
+LR2.Department --> LR2.Teacher
+LR2.Discipline --> LR2.Teacher
+LR2.Dormitory --> LR2.Building
+LR2.Dormitory --> LR2.Staff
+LR2.Dormitory --> LR2.Student
+LR2.Faculty --> LR2.AcademyBuilding
+LR2.Faculty --> LR2.Department
+LR2.Faculty --> LR2.Dormitory
+LR2.Faculty --> LR2.Speciality
+LR2.Faculty --> LR2.Student
+LR2.Group --> LR2.Discipline
+LR2.Group --> LR2.Student
+LR2.Rectorate --> LR2.Dormitory
+LR2.Rectorate --> LR2.Staff
+LR2.Rectorate --> LR2.Student
+LR2.Rectorate --> LR2.Teacher
+LR2.Speciality --> LR2.Discipline
+LR2.Speciality --> LR2.Group
+LR2.Staff --> LR2.AcademyBuilding
+LR2.Staff --> LR2.Dormitory
+LR2.Staff --> LR2.Person
+LR2.Student --> LR2.Discipline
+LR2.Student --> LR2.Dormitory
+LR2.Student --> LR2.Group
+LR2.Student --> LR2.Person
+LR2.Student --> LR2.ResidencePlace
+LR2.Teacher --> LR2.AcademicRank
+LR2.Teacher --> LR2.Department
+LR2.Teacher --> LR2.Discipline
+LR2.Teacher --> LR2.Person
+LR2.University --> LR2.AcademyBuilding
+LR2.University --> LR2.Dormitory
+LR2.University --> LR2.Person
+LR2.University --> LR2.Staff
+LR2.University --> LR2.Student
+LR2.University --> LR2.Teacher
+LR2.main --> LR2.AcademicRank
+LR2.main --> LR2.AcademyBuilding
+LR2.main --> LR2.Department
+LR2.main --> LR2.Discipline
+LR2.main --> LR2.Dormitory
+LR2.main --> LR2.Faculty
+LR2.main --> LR2.Group
+LR2.main --> LR2.Rectorate
+LR2.main --> LR2.ResidencePlace
+LR2.main --> LR2.Speciality
+LR2.main --> LR2.Staff
+LR2.main --> LR2.Student
+LR2.main --> LR2.Teacher
+LR2.main --> LR2.University
+@enduml

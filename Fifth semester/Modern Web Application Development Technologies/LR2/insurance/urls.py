@@ -1,0 +1,152 @@
+from django.urls import path, re_path
+
+from . import api_views, crud_views, portal_views, site_pages, stats_views
+
+app_name = "insurance"
+
+urlpatterns = [
+    path("", site_pages.SiteHomeView.as_view(), name="home"),
+    path("about/", site_pages.AboutView.as_view(), name="about"),
+    path("news/", site_pages.NewsListView.as_view(), name="news-list"),
+    path("news/<slug:slug>/", site_pages.NewsDetailView.as_view(), name="news-detail"),
+    path("faq/", site_pages.FAQListView.as_view(), name="faq-list"),
+    path("glossary/", site_pages.FAQListView.as_view(template_name="insurance/glossary.html"), name="glossary"),
+    path("contacts/", site_pages.ContactListView.as_view(template_name="insurance/contacts.html"), name="contact-list"),
+    path("contacts/", site_pages.ContactListView.as_view(template_name="insurance/contacts.html"), name="contacts"),
+    path("privacy/", site_pages.PrivacyView.as_view(template_name="insurance/privacy.html"), name="privacy"),
+    path("vacancies/", site_pages.VacancyListView.as_view(template_name="insurance/vacancies.html"), name="vacancy-list"),
+    path("vacancies/", site_pages.VacancyListView.as_view(template_name="insurance/vacancies.html"), name="vacancies"),
+    path("reviews/", site_pages.ReviewListView.as_view(template_name="insurance/reviews.html"), name="review-list"),
+    path("reviews/", site_pages.ReviewListView.as_view(template_name="insurance/reviews.html"), name="reviews"),
+    path("reviews/add/", site_pages.ReviewCreateView.as_view(), name="review-add"),
+    path("promos/", site_pages.PromoListView.as_view(template_name="insurance/promos.html"), name="promo-list"),
+    path("promos/", site_pages.PromoListView.as_view(template_name="insurance/promos.html"), name="promos"),
+    path("cart/", site_pages.CartView.as_view(), name="cart"),
+    path("checkout/", site_pages.CheckoutView.as_view(), name="checkout"),
+    path("register/", site_pages.RegisterView.as_view(), name="register"),
+    path("my/", portal_views.ClientDashboardView.as_view(), name="client-dashboard"),
+    path(
+        "my/profile/create/",
+        portal_views.ClientProfileCreateView.as_view(),
+        name="client-profile-create",
+    ),
+    path(
+        "my/profile/edit/",
+        portal_views.ClientProfileUpdateView.as_view(),
+        name="client-profile-edit",
+    ),
+    path(
+        "my/contracts/add/",
+        portal_views.ClientPortalContractCreateView.as_view(),
+        name="client-contract-add",
+    ),
+    path(
+        "staff/",
+        portal_views.EmployeeDashboardView.as_view(),
+        name="employee-dashboard",
+    ),
+    path(
+        "staff/contracts/",
+        portal_views.EmployeeContractListView.as_view(),
+        name="employee-contract-list",
+    ),
+    re_path(
+        r"^stats/dashboard/$",
+        stats_views.stats_dashboard,
+        name="stats-dashboard",
+    ),
+    path(
+        "api/branch/<int:pk>/weather/",
+        api_views.BranchWeatherJsonView.as_view(),
+        name="api-branch-weather",
+    ),
+    path(
+        "api/holidays/<int:year>/",
+        api_views.PublicHolidaysJsonView.as_view(),
+        name="api-holidays",
+    ),
+    path(
+        "holidays/<int:year>/",
+        api_views.holidays_page,
+        name="holidays-page",
+    ),
+    path("branches/", crud_views.branch_list, name="branch-list"),
+    path("branches/add/", crud_views.branch_create, name="branch-create"),
+    re_path(r"^branches/(?P<pk>\d+)/$", crud_views.branch_detail, name="branch-detail"),
+    path("branches/<int:pk>/edit/", crud_views.branch_update, name="branch-update"),
+    path("branches/<int:pk>/delete/", crud_views.branch_delete, name="branch-delete"),
+    path("insurance-types/", crud_views.insurancetype_list, name="insurancetype-list"),
+    path(
+        "insurance-types/add/",
+        crud_views.insurancetype_create,
+        name="insurancetype-create",
+    ),
+    path(
+        "insurance-types/<int:pk>/",
+        crud_views.insurancetype_detail,
+        name="insurancetype-detail",
+    ),
+    path(
+        "insurance-types/<int:pk>/edit/",
+        crud_views.insurancetype_update,
+        name="insurancetype-update",
+    ),
+    path(
+        "insurance-types/<int:pk>/delete/",
+        crud_views.insurancetype_delete,
+        name="insurancetype-delete",
+    ),
+    path("agents/", crud_views.agent_list, name="agent-list"),
+    path("agents/add/", crud_views.agent_create, name="agent-create"),
+    path("agents/<int:pk>/", crud_views.agent_detail, name="agent-detail"),
+    path("agents/<int:pk>/edit/", crud_views.agent_update, name="agent-update"),
+    path("agents/<int:pk>/delete/", crud_views.agent_delete, name="agent-delete"),
+    path("clients/", crud_views.client_list, name="client-list"),
+    path("clients/add/", crud_views.client_create, name="client-create"),
+    path("clients/<int:pk>/", crud_views.client_detail, name="client-detail"),
+    path("clients/<int:pk>/edit/", crud_views.client_update, name="client-edit"),
+    path("clients/<int:pk>/edit/", crud_views.client_update, name="client-update"),
+    path("clients/<int:pk>/delete/", crud_views.client_delete, name="client-delete"),
+    path(
+        "insured-objects/",
+        crud_views.insuredobject_list,
+        name="insuredobject-list",
+    ),
+    path(
+        "insured-objects/add/",
+        crud_views.insuredobject_create,
+        name="insuredobject-create",
+    ),
+    path(
+        "insured-objects/<int:pk>/",
+        crud_views.insuredobject_detail,
+        name="insuredobject-detail",
+    ),
+    path(
+        "insured-objects/<int:pk>/edit/",
+        crud_views.insuredobject_update,
+        name="insuredobject-update",
+    ),
+    path(
+        "insured-objects/<int:pk>/delete/",
+        crud_views.insuredobject_delete,
+        name="insuredobject-delete",
+    ),
+    path("contracts/", crud_views.contract_list, name="contract-list"),
+    path("contracts/add/", crud_views.contract_create, name="contract-create"),
+    re_path(
+        r"^contracts/(?P<pk>\d+)/$",
+        crud_views.contract_detail,
+        name="contract-detail",
+    ),
+    re_path(
+        r"^contracts/(?P<pk>\d+)/edit/$",
+        crud_views.contract_update,
+        name="contract-update",
+    ),
+    re_path(
+        r"^contracts/(?P<pk>\d+)/delete/$",
+        crud_views.contract_delete,
+        name="contract-delete",
+    ),
+]

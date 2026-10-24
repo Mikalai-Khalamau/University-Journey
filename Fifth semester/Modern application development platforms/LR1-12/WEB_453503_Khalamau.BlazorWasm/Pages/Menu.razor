@@ -1,0 +1,57 @@
+@page "/menu"
+@attribute [Authorize]
+@inject IDataService DataService
+@implements IDisposable
+
+<PageTitle>Каталог камней</PageTitle>
+
+<h1>Каталог камней</h1>
+<p class="text-muted">
+    Данные загружаются из защищённого API. Выберите категорию и нажмите кнопку «Подробно»
+    рядом с названием камня, чтобы увидеть его описание, изображение и цену.
+    Для длинного списка доступен пейджер.
+</p>
+
+@if (!string.IsNullOrEmpty(DataService.ErrorMessage))
+{
+    <div class="alert alert-danger">@DataService.ErrorMessage</div>
+}
+
+<CategorySelector />
+
+<DishesList DishSelected="OnDishSelected" SelectedDishId="@(SelectedDish?.Id)" />
+
+<Pager CategoryName="@(DataService.SelectedCategory?.Name ?? "Все категории")" />
+
+<DishDetails SelectedDish="SelectedDish" />
+
+@code {
+    private Gem? SelectedDish { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataService.DataLoaded += OnDataLoaded;
+        await DataService.GetCategoryListAsync();
+        await DataService.GetProductListAsync(1);
+    }
+
+    private void OnDishSelected(int id)
+    {
+        SelectedDish = DataService.ObjectsList.FirstOrDefault(gem => gem.Id == id);
+    }
+
+    private void OnDataLoaded()
+    {
+        if (SelectedDish is not null && DataService.Dishes.All(gem => gem.Id != SelectedDish.Id))
+        {
+            SelectedDish = null;
+        }
+
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        DataService.DataLoaded -= OnDataLoaded;
+    }
+}

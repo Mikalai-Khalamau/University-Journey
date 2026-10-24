@@ -1,0 +1,28 @@
+{% extends "insurance/base.html" %}
+{% block title %}Отзывы{% endblock %}
+{% block content %}
+<h1>Отзывы</h1>
+<p>
+  {% if user.is_authenticated %}
+    {% if is_client_group or user.is_superuser %}
+    <a href="{% url 'insurance:review-add' %}">Добавить отзыв</a>
+    {% else %}
+    <span>Отзывы могут оставлять пользователи в группе «client» (после регистрации).</span>
+    {% endif %}
+  {% else %}
+    {% url 'insurance:review-add' as review_add_url %}
+    <a href="{% url 'login' %}?next={{ review_add_url|urlencode }}">Войти, чтобы оставить отзыв</a>
+    или <a href="{% url 'insurance:register' %}">зарегистрироваться</a>
+  {% endif %}
+</p>
+{% for r in reviews %}
+  <article style="margin-bottom:1rem;border-bottom:1px solid #eee;">
+    <p><strong>{% firstof r.user.username r.guest_name "Аноним" %}</strong> — оценка {{ r.rating }}/5</p>
+    <p>{{ r.text|linebreaks }}</p>
+    <p><small>{{ r.created_at|date:"d.m.Y" }}</small></p>
+  </article>
+{% empty %}
+  <p>Отзывов пока нет.</p>
+{% endfor %}
+{% include "insurance/_pagination.html" %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "insurance/base.html" %}
+{% block title %}Новый отзыв{% endblock %}
+{% block content %}
+<h1>Оставить отзыв</h1>
+<p>Вы вошли как <strong>{{ user.username }}</strong>.</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p><button type="submit">Отправить</button>
+  <a href="{% url 'insurance:review-list' %}">Отмена</a></p>
+</form>
+{% endblock %}

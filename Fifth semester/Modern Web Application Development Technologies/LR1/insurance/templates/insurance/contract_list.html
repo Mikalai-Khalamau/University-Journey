@@ -1,0 +1,32 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>Договоры</h1>
+<p><a href="{% url 'insurance:contract-create' %}">Добавить</a></p>
+<table border="1" cellpadding="6" class="js-filter-table">
+  <thead>
+  <tr>
+    <th>#</th><th>Дата</th><th>Тип</th><th>Сумма</th><th>Премия</th><th>Комиссия</th><th>Филиал</th><th></th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for c in contracts %}
+  <tr>
+    <td data-sort="{{ c.pk }}"><a href="{% url 'insurance:contract-detail' c.pk %}">{{ c.pk }}</a></td>
+    <td data-sort="{{ c.signed_date|date:'Y-m-d' }}">{{ c.signed_date }}</td>
+    <td>{{ c.insurance_type.name }}</td>
+    <td>{{ c.insurance_amount }}</td>
+    <td>{{ c.premium_amount }}</td>
+    <td>{{ c.commission_amount }}</td>
+    <td>{{ c.branch.name }}</td>
+    <td>
+      <a href="{% url 'insurance:contract-update' c.pk %}">Изменить</a>
+      <a href="{% url 'insurance:contract-delete' c.pk %}">Удалить</a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="8">Нет записей.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% include "insurance/_pagination.html" %}
+{% endblock %}

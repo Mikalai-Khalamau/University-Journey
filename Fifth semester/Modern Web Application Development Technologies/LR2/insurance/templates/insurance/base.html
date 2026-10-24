@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Надежная страховая компания: оформление договоров страхования, КАСКО, ОСАГО, страхование жизни и имущества.">
+  <meta name="keywords" content="страхование, филиалы, договоры, полис, КАСКО, ОСАГО, агенты">
+  <meta property="og:title" content="Страховая фирма — Безопасное будущее">
+  <meta property="og:type" content="website">
+  <title>{% block title %}Страховая фирма{% endblock %}</title>
+  <link rel="icon" href="{% static 'insurance/images/favicon.ico' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'insurance/css/style.css' %}">
+  <script src="{% static 'insurance/js/table_filter.js' %}" defer></script>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <header class="site-header" itemscope itemtype="https://schema.org/InsuranceAgency">
+    <div class="site-brand">
+      <a href="{% url 'insurance:home' %}">
+        <img class="brand-logo" src="{% static 'insurance/images/logo.jpg' %}" alt="Логотип компании" width="50" height="50">
+      </a>
+      <span class="company-name" itemprop="name"><strong>Страховая фирма «Гарант»</strong></span>
+    </div>
+    <nav class="site-nav" aria-label="Основная навигация">
+      <a href="{% url 'insurance:home' %}">Главная</a> |
+      <a href="{% url 'insurance:insurancetype-list' %}">Услуги</a> |
+      <a href="{% url 'insurance:cart' %}">Корзина</a> |
+      <a href="{% url 'insurance:about' %}">О компании</a> |
+      <a href="{% url 'insurance:news-list' %}">Новости</a> |
+      <a href="{% url 'insurance:faq-list' %}">Словарь / FAQ</a> |
+      <a href="{% url 'insurance:contact-list' %}">Контакты</a> |
+      <a href="{% url 'insurance:vacancy-list' %}">Вакансии</a> |
+      <a href="{% url 'insurance:review-list' %}">Отзывы</a> |
+      <a href="{% url 'insurance:promo-list' %}">Промокоды</a> |
+      <a href="{% url 'insurance:privacy' %}">Политика конфиденциальности</a>
+      {% if user.is_authenticated %}
+        | <a href="{% url 'insurance:holidays-page' 2026 %}">Праздники (API)</a>
+      {% endif %}
+    </nav>
+    <div class="site-nav-secondary">
+      <span><strong>Личный кабинет:</strong></span>
+      <nav aria-label="Личный кабинет">
+        {% if is_client_group or user.is_superuser %}
+          <a href="{% url 'insurance:client-dashboard' %}">Кабинет клиента</a>
+        {% endif %}
+        {% if show_crm_tools %}
+          | <a href="{% url 'insurance:employee-dashboard' %}">Кабинет сотрудника</a>
+          | <a href="{% url 'insurance:employee-contract-list' %}">Договоры (поиск)</a>
+          | <a href="{% url 'insurance:stats-dashboard' %}">Статистика</a>
+        {% endif %}
+      </nav>
+    </div>
+    <div class="site-nav-secondary">
+      <span><strong>Справочники и CRM:</strong></span>
+      <nav aria-label="Справочники">
+        <a href="{% url 'insurance:branch-list' %}">Филиалы</a> |
+        <a href="{% url 'insurance:insurancetype-list' %}">Виды страхования и тарифы</a>
+        {% if show_crm_tools %}
+          | <a href="{% url 'insurance:agent-list' %}">Агенты</a> |
+          <a href="{% url 'insurance:client-list' %}">Клиенты</a> |
+          <a href="{% url 'insurance:insuredobject-list' %}">Объекты</a> |
+          <a href="{% url 'insurance:contract-list' %}">Договоры</a>
+        {% endif %}
+      </nav>
+    </div>
+    <div class="user-bar">
+      {% if user.is_authenticated %}
+        <span>Вы вошли как {{ user.username }}.</span>
+        <form class="inline-form" method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit">Выйти</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Вход</a> |
+        <a href="{% url 'insurance:register' %}">Регистрация</a>
+      {% endif %}
+      | <a href="/admin/">Админка</a>
+    </div>
+  </header>
+
+  {% if messages %}
+  <aside class="sys-messages" aria-label="Системные сообщения">
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </aside>
+  {% endif %}
+
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <aside class="site-aside" aria-label="Боковая панель">
+    <h2>Полезная информация</h2>
+    <p>Оформите полис онлайн за 5 минут. Действуют скидки по промокодам!</p>
+    <a class="btn btn-primary" href="{% url 'insurance:promo-list' %}">Перейти к промокодам</a>
+  </aside>
+
+  <footer class="site-footer">
+    <hr>
+    <div>
+      <h3>Навигация по сайту</h3>
+      <nav aria-label="Нижнее меню">
+        <ul class="footer-menu">
+          <li><a href="{% url 'insurance:home' %}">Главная</a></li>
+          <li><a href="{% url 'insurance:insurancetype-list' %}">Услуги</a></li>
+          <li><a href="{% url 'insurance:about' %}">О компании</a></li>
+          <li><a href="{% url 'insurance:news-list' %}">Новости</a></li>
+          <li><a href="{% url 'insurance:contact-list' %}">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div>
+      <p>Внешние ресурсы: <a class="ext-link" href="https://www.google.com" target="_blank" rel="noopener noreferrer">Google</a></p>
+      <p>Скачать документы: <a class="doc-link" href="{% static 'insurance/images/news_1.svg' %}" download>Логотип (SVG)</a></p>
+    </div>
+    <address class="site-address" itemprop="address">
+      Главный офис: г. Минск, пр. Независимости, 4. Телефон: <a href="tel:+375172000000" itemprop="telephone">+375 (17) 200-00-00</a>, Email: <a href="mailto:support@insurance.by" itemprop="email">support@insurance.by</a>
+    </address>
+    <p>&copy; 2026 Страховая фирма «Гарант». Все права защищены.</p>
+  </footer>
+
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader-compass"></div>
+  </div>
+</body>
+</html>

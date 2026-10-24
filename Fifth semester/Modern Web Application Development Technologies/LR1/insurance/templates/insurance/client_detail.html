@@ -1,0 +1,21 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>{{ client.full_name }}</h1>
+<p><strong>Телефон:</strong> {{ client.phone }}</p>
+<p><strong>Email:</strong> {{ client.email }}</p>
+<p><strong>Дата рождения:</strong> {{ client.birth_date }}</p>
+<p><strong>Адрес:</strong> {{ client.address }}</p>
+{% if client.user %}<p><strong>Аккаунт:</strong> {{ client.user.username }}</p>{% endif %}
+<h2>Договоры</h2>
+<ul>
+  {% for x in client.contracts.all %}
+  <li><a href="{% url 'insurance:contract-detail' x.pk %}">#{{ x.pk }} — {{ x.insurance_type.name }}</a></li>
+  {% empty %}<li>Нет договоров.</li>
+  {% endfor %}
+</ul>
+<p>
+  <a href="{% url 'insurance:client-update' client.pk %}">Изменить</a>
+  <a href="{% url 'insurance:client-delete' client.pk %}">Удалить</a>
+  <a href="{% url 'insurance:client-list' %}">К списку</a>
+</p>
+{% endblock %}

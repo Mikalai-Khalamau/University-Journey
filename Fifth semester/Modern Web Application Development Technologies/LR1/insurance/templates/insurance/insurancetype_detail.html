@@ -1,0 +1,67 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}{{ insurance_type.name }} — Детали услуги{% endblock %}
+
+{% block extra_css %}
+<style>
+  abbr[title] {
+    text-decoration: underline dotted;
+    cursor: help;
+    font-weight: bold;
+    color: #0056b3;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<article>
+  <h1>{{ insurance_type.name }}</h1>
+  <p><em>Официальный страховой продукт нашей компании с гарантией выплат.</em></p>
+  
+  <section>
+    <h2>Характеристики и условия</h2>
+    <dl>
+      <dt>Вид полиса / Сокращение</dt>
+      <dd>
+        {% if "ОСАГО" in insurance_type.name or "авто" in insurance_type.name %}
+          <abbr title="Обязательное страхование гражданской ответственности владельцев транспортных средств">ОСАГО</abbr> 
+          <span>— Обязательное страхование гражданской ответственности владельцев транспортных средств</span>
+        {% elif "КАСКО" in insurance_type.name %}
+          <abbr title="Комплексное автострахование добровольное (ущерб и хищение)">КАСКО</abbr> 
+          <span>— Комплексное автострахование добровольное</span>
+        {% else %}
+          <abbr title="Добровольное страхование и защита имущественных интересов">ДС</abbr> 
+          <span>— Добровольное страхование и защита имущественных интересов</span>
+        {% endif %}
+      </dd>
+
+      <dt>Тарифная ставка</dt>
+      <dd><strong>{{ insurance_type.tariff_rate }}</strong> (доля от страховой суммы за период)</dd>
+
+      <dt>Комиссия агента</dt>
+      <dd><em>{{ insurance_type.agent_commission_percent }}%</em> от страховой премии</dd>
+
+      <dt>Срок действия</dt>
+      <dd>Стандартный срок договора: от 1 года с возможностью пролонгации.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Оформление услуги</h2>
+    <form method="get" action="{% url 'insurance:cart' %}">
+      <input type="hidden" name="action" value="add">
+      <input type="hidden" name="item_id" value="{{ insurance_type.pk }}">
+      <p>Вы можете добавить эту услугу в корзину или подать заявку.</p>
+      <button type="submit">Добавить в корзину</button>
+    </form>
+  </section>
+
+  <p>
+    {% if show_crm_tools %}
+      <a href="{% url 'insurance:insurancetype-update' insurance_type.pk %}">Изменить</a> |
+      <a href="{% url 'insurance:insurancetype-delete' insurance_type.pk %}">Удалить</a> |
+    {% endif %}
+    <a href="{% url 'insurance:insurancetype-list' %}">К списку услуг</a>
+  </p>
+</article>
+{% endblock %}

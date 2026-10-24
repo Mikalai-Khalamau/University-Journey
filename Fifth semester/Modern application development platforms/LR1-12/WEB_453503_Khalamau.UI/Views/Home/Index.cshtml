@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h1 class="mb-3">@ViewData["LabTitle"]</h1>
+
+<h3 class="mb-3">Список</h3>
+<ol type="A" class="mb-4">
+    @for(int i = 0; i < 5; i++)
+    {
+        <li>Элемент @i списка</li>
+    }
+</ol>
+
+<hr class="my-4">
+
+<form method="post" asp-controller="Home" asp-action="Index">
+    <h4 class="mb-3"><strong>Форма</strong></h4>
+
+    <div class="row mb-3">
+        <div class="col-sm-9 offset-sm-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" 
+                       name="checkbox1" id="check1" value="true">
+                <label class="form-check-label" for="check1">Чек-бокс 1</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-sm-9 offset-sm-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" 
+                       name="checkbox2" id="check2" value="true">
+                <label class="form-check-label" for="check2">Чек-бокс 2</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-sm-9 offset-sm-2">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" 
+                       name="radioGroup" id="radio1" value="radio1">
+                <label class="form-check-label" for="radio1">Радио-1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" 
+                       name="radioGroup" id="radio2" value="radio2">
+                <label class="form-check-label" for="radio2">Радио-2</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" 
+                       name="radioGroup" id="radio3" value="radio3">
+                <label class="form-check-label" for="radio3">Радио-3</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="loginInput" class="col-sm-2 col-form-label">Логин:</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" 
+                   id="loginInput" name="login" 
+                   placeholder="Введите логин">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="passwordInput" class="col-sm-2 col-form-label">Пароль:</label>
+        <div class="col-sm-6">
+            <input type="password" class="form-control" 
+                   id="passwordInput" name="password" 
+                   placeholder="Введите пароль">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label for="demoSelect" class="col-sm-2 col-form-label">Выбор:</label>
+        <div class="col-sm-6">
+            <select class="form-select" 
+                    id="demoSelect" 
+                    name="selectedDemoId" 
+                    asp-items="@(ViewData["DemoList"] as SelectList)">
+                <option value="">-- Выберите вариант --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-sm-6">
+            <button type="submit" class="btn btn-info">Отправить</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,32 @@
+{% extends "insurance/base.html" %}
+{% load tz %}
+{% block content %}
+<h1>Договор #{{ contract.pk }}</h1>
+<p><strong>Создан (UTC):</strong> {% timezone "UTC" %}{{ contract.created_at|date:"d.m.Y H:i" }}{% endtimezone %}
+   | <strong>на сервере ({{ server_tz|default:"Europe/Minsk" }}):</strong> {{ contract.created_at|date:"d.m.Y H:i" }}</p>
+<p><strong>Период:</strong> {{ contract.signed_date }} — {{ contract.end_date }}</p>
+<p><strong>Тип:</strong> {{ contract.insurance_type.name }}</p>
+<p><strong>Страховая сумма:</strong> {{ contract.insurance_amount }}</p>
+<p><strong>Премия:</strong> {{ contract.premium_amount }}</p>
+<p><strong>Комиссия агента:</strong> {{ contract.commission_amount }}</p>
+<p><strong>Филиал:</strong> <a href="{% url 'insurance:branch-detail' contract.branch.pk %}">{{ contract.branch.name }}</a></p>
+<p><strong>Агент:</strong> {% if show_crm_tools %}<a href="{% url 'insurance:agent-detail' contract.agent.pk %}">{% endif %}{{ contract.agent.last_name }} {{ contract.agent.first_name }}{% if show_crm_tools %}</a>{% endif %}</p>
+<p><strong>Клиент:</strong> {% if show_crm_tools %}<a href="{% url 'insurance:client-detail' contract.client.pk %}">{% endif %}{{ contract.client.full_name }}{% if show_crm_tools %}</a>{% endif %}</p>
+<h2>Объекты</h2>
+<ul>
+  {% for o in contract.insured_objects.all %}
+  <li>{% if show_crm_tools %}<a href="{% url 'insurance:insuredobject-detail' o.pk %}">{% endif %}{{ o.get_object_type_display }}: {{ o.description }}{% if show_crm_tools %}</a>{% endif %}</li>
+  {% empty %}<li>Не указаны.</li>
+  {% endfor %}
+</ul>
+<p>
+  {% if show_crm_tools %}
+    <a href="{% url 'insurance:contract-update' contract.pk %}">Изменить</a>
+    <a href="{% url 'insurance:contract-delete' contract.pk %}">Удалить</a>
+    <a href="{% url 'insurance:contract-list' %}">К списку (CRM)</a>
+  {% endif %}
+  {% if is_client_group %}
+    <a href="{% url 'insurance:client-dashboard' %}">В кабинет клиента</a>
+  {% endif %}
+</p>
+{% endblock %}

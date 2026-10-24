@@ -1,0 +1,45 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Словарь терминов и FAQ — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Словарь терминов и часто задаваемые вопросы (FAQ)</h1>
+  <p>Здесь вы найдете определения ключевых понятий страхования (<dfn>страховой полис</dfn>, <dfn>франшиза</dfn>) и ответы на популярные вопросы.</p>
+
+  <section>
+    <h2>Часто задаваемые вопросы</h2>
+    {% for entry in faq_entries %}
+      <details style="margin-bottom: 15px; border: 1px solid #d1d5db; padding: 12px 16px; border-radius: 6px; background: #fff;">
+        <summary style="cursor: pointer; font-weight: bold; color: #1f2937; font-size: 1.05em;">
+          {{ entry.question }}
+        </summary>
+        <p style="margin-top: 8px; color: #4b5563; font-size: 0.95em;">
+          <strong>Краткий ответ:</strong> {{ entry.answer|truncatechars:90 }}
+        </p>
+        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e5e7eb;">
+          <p><strong>Развернутый ответ:</strong></p>
+          <p>{{ entry.answer }}</p>
+          <p style="margin-top: 8px;"><small style="color: #9ca3af;">Дата добавления: <time datetime="{{ entry.created_at|date:'Y-m-d' }}">{{ entry.created_at|date:"d/m/Y" }}</time></small></p>
+        </div>
+      </details>
+    {% empty %}
+      <p>Вопросы пока не добавлены.</p>
+    {% endfor %}
+  </section>
+
+  <section style="margin-top: 30px;">
+    <h2>Основные термины</h2>
+    <dl>
+      <dt><dfn>Франшиза</dfn></dt>
+      <dd>Часть убытка, которая не возмещается страховой компанией при наступлении страхового случая.</dd>
+
+      <dt><dfn>Страховая премия</dfn></dt>
+      <dd>Плата за страхование, которую страхователь обязан уплатить страховщику.</dd>
+
+      <dt><abbr title="Обязательное страхование гражданской ответственности владельцев транспортных средств">ОСАГО</abbr></dt>
+      <dd>Обязательный вид страхования ответственности водителей перед третьими лицами.</dd>
+    </dl>
+  </section>
+</article>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "insurance/base.html" %}
+{% load insurance_extras %}
+{% block title %}Контакты{% endblock %}
+{% block content %}
+<h1>Контакты</h1>
+{% for c in contacts %}
+  <section style="margin-bottom:1.5rem;">
+    <h2>{{ c.full_name }} — {{ c.role_title }}</h2>
+    <p><img src="{% picture_src c.photo_url 'insurance/images/contact.svg' %}" alt="{{ c.full_name }}" width="120" height="120"></p>
+    <p>{{ c.bio|linebreaks }}</p>
+    <p>Телефон: {{ c.phone }} | Email: <a href="mailto:{{ c.email }}">{{ c.email }}</a></p>
+    {% if c.branch %}<p>Филиал: {{ c.branch.name }}</p>{% endif %}
+  </section>
+{% empty %}
+  <p>Контакты не заполнены.</p>
+{% endfor %}
+{% include "insurance/_pagination.html" %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>Удалить объект</h1>
+<p>{{ object.description }} — вы уверены?</p>
+<form method="post">{% csrf_token %}
+  <button type="submit">Удалить</button>
+  <a href="{% url 'insurance:insuredobject-detail' object.pk %}">Отмена</a>
+</form>
+{% endblock %}

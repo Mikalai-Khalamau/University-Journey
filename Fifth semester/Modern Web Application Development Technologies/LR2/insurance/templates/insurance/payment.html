@@ -1,0 +1,75 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Оплата заказа — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Оплата страхового полиса</h1>
+  <p>Заполните платежные реквизиты для завершения оформления договора.</p>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    
+    <fieldset>
+      <legend>Контактные данные плательщика</legend>
+      
+      <p>
+        <label for="payer-name">ФИО плательщика:</label><br>
+        <input type="text" id="payer-name" name="payer_name" required minlength="5" maxlength="120" placeholder="Иванов Иван Иванович" class="field-wide">
+      </p>
+
+      <p>
+        <label for="payer-email">Электронная почта (для отправки полиса):</label><br>
+        <input type="email" id="payer-email" name="payer_email" required placeholder="client@example.by" class="field-wide">
+      </p>
+
+      <p>
+        <label for="payer-phone">Мобильный телефон (+375...):</label><br>
+        <input type="tel" id="payer-phone" name="payer_phone" required pattern="^\+?[0-9\s\-\(\)]{9,20}$" placeholder="+375 (29) 123-45-67" class="field-wide">
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Данные банковской карты</legend>
+
+      <p>
+        <label for="bank-choice">Ваш банк:</label><br>
+        <input list="banks" id="bank-choice" name="bank" placeholder="Выберите или введите банк..." class="field-wide">
+        <datalist id="banks">
+          <option value="Беларусбанк">
+          <option value="Приорбанк">
+          <option value="Альфа-Банк">
+          <option value="МТБанк">
+          <option value="Белагропромбанк">
+        </datalist>
+      </p>
+
+      <p>
+        <label for="card-num">Номер банковской карты (16 цифр):</label><br>
+        <input type="text" id="card-num" name="card_number" required pattern="[0-9]{16}" maxlength="16" placeholder="4000123456789012" class="field-wide">
+      </p>
+
+      <p>
+        <label for="card-date">Срок действия:</label><br>
+        <input type="date" id="card-date" name="card_date" required class="field-wide">
+      </p>
+
+      <p>
+        <label for="pay-amount">Сумма к оплате (BYN):</label><br>
+        <input type="number" id="pay-amount" name="amount" value="{{ total_amount|default:'450.00' }}" step="0.01" min="0.01" max="10000" required class="field-amount">
+      </p>
+
+      <p>
+        <label for="promo-arch">Архивный промокод (заблокировано):</label><br>
+        <input type="text" id="promo-arch" name="promo_arch" value="GARANT-2020" disabled class="field-wide">
+      </p>
+    </fieldset>
+
+    <p class="actions-row">
+      <button class="btn btn-primary btn-pay" type="submit">Подтвердить оплату</button>
+    </p>
+  </form>
+
+  <p><a href="{% url 'insurance:cart' %}">← Вернуться в корзину</a></p>
+</article>
+{% endblock %}

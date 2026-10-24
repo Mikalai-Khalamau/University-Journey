@@ -1,0 +1,35 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Вакансии — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Карьера в компании «Гарант»</h1>
+  <p>Станьте частью нашей профессиональной команды! Присоединяйтесь к лидеру рынка страхования.</p>
+
+  <section class="vacancies-list">
+    <h2>Открытые вакансии</h2>
+    {% for v in vacancies %}
+      <article class="vacancy-card">
+        <h3>
+          {{ v.title }}
+          {% if forloop.first %}
+            <mark class="vacancy-badge">Горячая вакансия</mark>
+          {% endif %}
+        </h3>
+        <p>{{ v.description }}</p>
+        <h4>Требования к кандидату:</h4>
+        <ul class="req-list">
+          <li>Высшее образование (экономическое/юридическое приветствуется).</li>
+          <li>Опыт работы в сфере продаж или страхования от 1 года.</li>
+          <li>Уверенные коммуникативные навыки и клиентоориентированность.</li>
+        </ul>
+        <p><strong>Статус:</strong> {% if v.is_active %}Активна{% else %}Закрыта{% endif %}</p>
+        <p><a class="btn btn-primary vacancy-apply" href="mailto:hr@insurance.by">Откликнуться на вакансию</a></p>
+      </article>
+    {% empty %}
+      <p>В настоящий момент открытых вакансий нет.</p>
+    {% endfor %}
+  </section>
+</article>
+{% endblock %}

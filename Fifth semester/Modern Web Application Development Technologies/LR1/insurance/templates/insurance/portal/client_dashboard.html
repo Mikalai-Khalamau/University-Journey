@@ -1,0 +1,40 @@
+{% extends "insurance/base.html" %}
+{% block title %}Кабинет клиента{% endblock %}
+{% block content %}
+<h1>Личный кабинет клиента</h1>
+{% if not profile %}
+  <p>Заполните профиль клиента, чтобы видеть договоры и оформлять услуги.</p>
+  <p><a href="{% url 'insurance:client-profile-create' %}">Создать профиль</a></p>
+{% else %}
+  <p>Профиль: <strong>{{ profile.full_name }}</strong>
+    (<a href="{% url 'insurance:client-profile-edit' %}">изменить</a>)</p>
+  <h2>Мои договоры</h2>
+  <p><a href="{% url 'insurance:client-contract-add' %}">Оформить договор</a></p>
+  {% if contracts %}
+    <table border="1" cellpadding="6">
+      <tr><th>#</th><th>Дата</th><th>Тип</th><th>Сумма</th><th>Премия</th><th>Филиал</th></tr>
+      {% for c in contracts %}
+      <tr>
+        <td><a href="{% url 'insurance:contract-detail' c.pk %}">{{ c.pk }}</a></td>
+        <td>{{ c.signed_date }}</td>
+        <td>{{ c.insurance_type.name }}</td>
+        <td>{{ c.insurance_amount }}</td>
+        <td>{{ c.premium_amount }}</td>
+        <td>{{ c.branch.name }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>Договоров пока нет.</p>
+  {% endif %}
+  <h2>Актуальные промокоды</h2>
+  <ul>
+    {% for p in promo_highlights %}
+      <li><strong>{{ p.code }}</strong> — скидка {{ p.discount_percent }}% (до {{ p.valid_until|date:"d.m.Y" }})</li>
+    {% empty %}
+      <li>Нет действующих промокодов.</li>
+    {% endfor %}
+  </ul>
+  <p><a href="{% url 'insurance:promo-list' %}">Все промокоды</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "insurance/base.html" %}
+
+{% block title %}Вакансии — Страховая фирма{% endblock %}
+
+{% block content %}
+<article>
+  <h1>Карьера в компании «Гарант»</h1>
+  <p>Станьте частью нашей профессиональной команды! Присоединяйтесь к лидеру рынка страхования.</p>
+
+  <section>
+    <h2>Открытые вакансии</h2>
+    {% for v in vacancies %}
+      <article style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 6px;">
+        <h3>
+          {{ v.title }}
+          {% if forloop.first %}
+            <mark style="background: #ffc107; padding: 2px 6px; font-size: 0.8em; border-radius: 3px;">Горячая вакансия</mark>
+          {% endif %}
+        </h3>
+        <p>{{ v.description }}</p>
+        <h4>Требования к кандидату:</h4>
+        <ul>
+          <li>Высшее образование (экономическое/юридическое приветствуется).</li>
+          <li>Опыт работы в сфере продаж или страхования от 1 года.</li>
+          <li>Уверенные коммуникативные навыки и клиентоориентированность.</li>
+        </ul>
+        <p><strong>Статус:</strong> {% if v.is_active %}Активна{% else %}Закрыта{% endif %}</p>
+        <p><a href="mailto:hr@insurance.by" style="background: #007bff; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; display: inline-block;">Откликнуться на вакансию</a></p>
+      </article>
+    {% empty %}
+      <p>В настоящий момент открытых вакансий нет.</p>
+    {% endfor %}
+  </section>
+</article>
+{% endblock %}

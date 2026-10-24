@@ -1,0 +1,91 @@
+{% extends "insurance/base.html" %}
+{% load tz %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h1>Статистика и отчёты</h1>
+
+<section>
+  <h2>Время и календарь</h2>
+  <p><strong>Сейчас (UTC в БД):</strong> {% timezone "UTC" %}{{ now_utc|date:"d.m.Y H:i" }}{% endtimezone %}</p>
+  <p><strong>Сейчас (часовой пояс сервера, {{ server_tz }}):</strong> {% timezone server_tz %}{{ now_utc|date:"d.m.Y H:i" }}{% endtimezone %}</p>
+  <p><strong>Часовой пояс браузера:</strong> <span id="tz-label"></span> — <span id="local-now"></span></p>
+  <h3>Текстовый календарь (текущий месяц)</h3>
+  <pre>{{ calendar_text }}</pre>
+  <p>Внешний API Nager.Date:
+    <a href="{% url 'insurance:holidays-page' 2026 %}">праздники 2026 (страница)</a> |
+    <a href="{% url 'insurance:api-holidays' 2026 %}">JSON</a></p>
+</section>
+
+<section>
+  <h2>Премии по договорам</h2>
+  <p><strong>Сумма всех премий:</strong> {{ total_premium|floatformat:2 }}</p>
+  <ul>
+    <li>Среднее: {{ premium_stats.mean|floatformat:2|default:"—" }}</li>
+    <li>Медиана: {{ premium_stats.median|floatformat:2|default:"—" }}</li>
+    <li>Мода: {{ premium_stats.mode|floatformat:2|default:"—" }}</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Возраст клиентов (полных лет)</h2>
+  <ul>
+    <li>Среднее: {{ age_stats.mean|floatformat:1|default:"—" }}</li>
+    <li>Медиана: {{ age_stats.median|floatformat:1|default:"—" }}</li>
+    <li>Мода: {{ age_stats.mode|floatformat:1|default:"—" }}</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Виды страхования</h2>
+  <p><strong>Самый популярный:</strong> {{ most_popular_type }}</p>
+  <p><strong>Наибольшая сумма премий:</strong> {{ most_profitable_type }}</p>
+  <table border="1" cellpadding="6">
+    <tr><th>Вид</th><th>Договоров</th><th>Сумма премий</th></tr>
+    {% for row in by_type %}
+    <tr>
+      <td>{{ row.insurance_type__name }}</td>
+      <td>{{ row.cnt }}</td>
+      <td>{{ row.prem_sum|default:0 }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">Нет данных.</td></tr>
+    {% endfor %}
+  </table>
+</section>
+
+<section>
+  <h2>Клиенты (алфавит, до 50)</h2>
+  <table border="1" cellpadding="6" class="js-filter-table">
+    <thead>
+      <tr><th>ФИО</th><th>Телефон</th><th>Дата рождения</th></tr>
+    </thead>
+    <tbody>
+    {% for c in clients_alphabetical %}
+    <tr>
+      <td>{{ c.full_name }}</td>
+      <td>{{ c.phone }}</td>
+      <td data-sort="{{ c.birth_date|date:'Y-m-d' }}">{{ c.birth_date|date:"d.m.Y" }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>График (matplotlib, Python)</h2>
+  <p>Диаграмма строится на сервере при открытии страницы, не в JavaScript.</p>
+  <img src="data:image/png;base64,{{ chart_png_base64 }}" alt="Договоры по видам страхования" width="640">
+</section>
+
+<script>
+(function() {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  document.getElementById('tz-label').textContent = tz;
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('local-now').textContent =
+    pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' +
+    pad(d.getHours()) + ':' + pad(d.getMinutes());
+})();
+</script>
+{% endblock %}

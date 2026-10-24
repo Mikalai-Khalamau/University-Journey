@@ -1,0 +1,14 @@
+{% extends "insurance/base.html" %}
+{% block title %}Вакансии{% endblock %}
+{% block content %}
+<h1>Вакансии</h1>
+{% for v in vacancies %}
+  <section style="margin-bottom:1rem;">
+    <h2>{{ v.title }}</h2>
+    <div>{{ v.description|linebreaks }}</div>
+  </section>
+{% empty %}
+  <p>Активных вакансий нет.</p>
+{% endfor %}
+{% include "insurance/_pagination.html" %}
+{% endblock %}

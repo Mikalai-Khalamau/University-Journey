@@ -1,0 +1,64 @@
+﻿@page "/counter"
+@page "/counter/{Start:int}"
+@using WEB_453503_Khalamau.BlazorWasm.Models
+
+<PageTitle>Счётчик</PageTitle>
+
+<h1>Счётчик</h1>
+
+<p role="status">Текущее значение: <strong>@currentCount</strong></p>
+
+<button class="btn btn-primary mb-4" @onclick="IncrementCount">Увеличить на 1</button>
+
+<h2 class="h4">Установить значение счётчика</h2>
+
+<EditForm Model="model" OnValidSubmit="SetCounter" FormName="counter-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3" style="max-width: 20rem;">
+        <label for="counterValue" class="form-label">Целое число от 1 до 10</label>
+        <InputNumber id="counterValue" class="form-control" @bind-Value="model.Value" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Установить</button>
+</EditForm>
+
+<p class="mt-4 text-muted">
+    Начальное значение можно передать в адресе страницы:
+    <a href="counter/5">/counter/5</a> или <a href="counter?start=5">/counter?start=5</a>.
+</p>
+
+@code {
+    private int currentCount;
+    private CounterModel model = new();
+    private int? appliedStart;
+
+    [Parameter]
+    public int? Start { get; set; }
+
+    [SupplyParameterFromQuery(Name = "start")]
+    public int? QueryStart { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var start = Start ?? QueryStart;
+
+        if (start.HasValue && start != appliedStart)
+        {
+            appliedStart = start;
+            currentCount = start.Value;
+            model.Value = currentCount is >= 1 and <= 10 ? currentCount : 0;
+        }
+    }
+
+    private void SetCounter()
+    {
+        currentCount = model.Value;
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

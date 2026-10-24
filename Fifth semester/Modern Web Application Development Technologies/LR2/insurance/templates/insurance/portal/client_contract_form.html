@@ -1,0 +1,12 @@
+{% extends "insurance/base.html" %}
+{% block title %}Новый договор{% endblock %}
+{% block content %}
+<h1>Оформление договора</h1>
+<p>Агент будет назначен автоматически (первый в выбранном филиале).</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p><button type="submit">Отправить заявку</button>
+  <a href="{% url 'insurance:client-dashboard' %}">Отмена</a></p>
+</form>
+{% endblock %}

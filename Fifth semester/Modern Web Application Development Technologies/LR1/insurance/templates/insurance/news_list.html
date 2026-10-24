@@ -1,0 +1,20 @@
+{% extends "insurance/base.html" %}
+{% load static insurance_extras %}
+{% block title %}Новости — Страховая фирма{% endblock %}
+{% block content %}
+<h1>Новости компании</h1>
+{% for a in articles %}
+  <article style="margin-bottom:2rem; border-bottom:1px solid #ddd; padding-bottom:1.5rem;">
+    <h2><a href="{% url 'insurance:news-detail' a.slug %}">{{ a.title }}</a></h2>
+    <p><time datetime="{{ a.published_at|date:'Y-m-d' }}"><small>Дата публикации: {{ a.published_at|date:"d/m/Y" }}</small></time></p>
+    <figure>
+      <img src="{% picture_src a.image_url 'insurance/images/news_1.svg' %}" alt="{{ a.title }}" width="320" height="160">
+      <figcaption><mark>Важно:</mark> {{ a.summary }}</figcaption>
+    </figure>
+    <p><a href="{% url 'insurance:news-detail' a.slug %}">Читать далее →</a></p>
+  </article>
+{% empty %}
+  <p>Нет опубликованных новостей.</p>
+{% endfor %}
+{% include "insurance/_pagination.html" %}
+{% endblock %}

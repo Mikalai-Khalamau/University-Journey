@@ -1,0 +1,12 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>{{ agent.last_name }} {{ agent.first_name }} {{ agent.patronymic }}</h1>
+<p><strong>Филиал:</strong> <a href="{% url 'insurance:branch-detail' agent.branch.pk %}">{{ agent.branch.name }}</a></p>
+<p><strong>Телефон:</strong> {{ agent.phone }}</p>
+<p><strong>Дата рождения:</strong> {{ agent.birth_date }}</p>
+<p>
+  <a href="{% url 'insurance:agent-update' agent.pk %}">Изменить</a>
+  <a href="{% url 'insurance:agent-delete' agent.pk %}">Удалить</a>
+  <a href="{% url 'insurance:agent-list' %}">К списку</a>
+</p>
+{% endblock %}

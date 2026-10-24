@@ -1,0 +1,24 @@
+<div class="die die-roll" title="Кубик: @Value" aria-label="Кубик: @Value">
+    @foreach (var pip in Pips)
+    {
+        <span class="pip @pip"></span>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Value { get; set; }
+
+    private static readonly string[][] Faces =
+    {
+        Array.Empty<string>(),
+        new[] { "center" },
+        new[] { "tl", "br" },
+        new[] { "tl", "center", "br" },
+        new[] { "tl", "tr", "bl", "br" },
+        new[] { "tl", "tr", "center", "bl", "br" },
+        new[] { "tl", "tr", "ml", "mr", "bl", "br" }
+    };
+
+    private string[] Pips => Value is >= 1 and <= 6 ? Faces[Value] : Array.Empty<string>();
+}

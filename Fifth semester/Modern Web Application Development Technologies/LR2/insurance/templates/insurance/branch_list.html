@@ -1,0 +1,33 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>Филиалы</h1>
+{% if show_crm_tools %}
+<p><a href="{% url 'insurance:branch-create' %}">Добавить</a></p>
+{% endif %}
+<table border="1" cellpadding="6" class="js-filter-table">
+  <thead>
+  <tr>
+    <th>Название</th><th>Город</th><th>Телефон</th>
+    {% if show_crm_tools %}<th></th>{% endif %}
+  </tr>
+  </thead>
+  <tbody>
+  {% for b in branches %}
+  <tr>
+    <td><a href="{% url 'insurance:branch-detail' b.pk %}">{{ b.name }}</a></td>
+    <td>{{ b.city }}</td>
+    <td>{{ b.phone }}</td>
+    {% if show_crm_tools %}
+    <td>
+      <a href="{% url 'insurance:branch-update' b.pk %}">Изменить</a>
+      <a href="{% url 'insurance:branch-delete' b.pk %}">Удалить</a>
+    </td>
+    {% endif %}
+  </tr>
+  {% empty %}
+  <tr><td colspan="{% if show_crm_tools %}4{% else %}3{% endif %}">Нет записей.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% include "insurance/_pagination.html" %}
+{% endblock %}

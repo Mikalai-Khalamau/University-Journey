@@ -1,0 +1,61 @@
+﻿@if (User.Identity?.IsAuthenticated == true)
+{
+    @await Component.InvokeAsync("Cart")
+
+    <!-- DEBUG CLAIMS: @string.Join(" | ", User.Claims.Select(c => $"{c.Type}={c.Value}")) -->
+
+    var userName = User.Claims.FirstOrDefault(c => c.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value ?? User.Identity!.Name ?? "User";
+    var avatar = User.Claims.FirstOrDefault(c => c.Type.Equals("avatar", StringComparison.OrdinalIgnoreCase) || c.Type.EndsWith("/avatar", StringComparison.OrdinalIgnoreCase) || c.Type.EndsWith(".avatar", StringComparison.OrdinalIgnoreCase))?.Value ?? "Images/default-profile-picture.png";
+    if (!avatar.StartsWith("~"))
+    {
+        avatar = $"~/{avatar.TrimStart('/')}";
+    }
+
+    <div class="dropdown ms-4">
+        <button class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+            @userName
+            <img src="@Url.Content(avatar)"
+                 width="30"
+                 alt="User"
+                 class="rounded" />
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="dropdownMenuButton">
+            <li>
+                <span class="dropdown-item-text">
+                    <img src="@Url.Content(avatar)"
+                         width="50"
+                         alt="User"
+                         class="rounded me-2" />
+                    @userName
+                </span>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      method="post"
+                      class="form-inline">
+                    <button id="logout"
+                            type="submit"
+                            class="nav-link btn btn-link text-dark w-100 text-start">
+                        Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <a asp-controller="Account"
+       asp-action="Login"
+       class="btn btn-outline-light me-2">Войти</a>
+    <a asp-controller="Account"
+       asp-action="Register"
+       class="btn btn-primary">Регистрация</a>
+}

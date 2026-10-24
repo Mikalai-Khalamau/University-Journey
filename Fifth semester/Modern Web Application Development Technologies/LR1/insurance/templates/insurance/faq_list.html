@@ -1,0 +1,15 @@
+{% extends "insurance/base.html" %}
+{% block title %}Словарь и FAQ{% endblock %}
+{% block content %}
+<h1>Словарь терминов и FAQ</h1>
+{% for e in faq_entries %}
+  <section style="margin-bottom:1rem;">
+    <h2>{{ e.question }}</h2>
+    <p>{{ e.answer|linebreaks }}</p>
+    <p><small>Добавлено: {{ e.created_at|date:"d.m.Y" }}</small></p>
+  </section>
+{% empty %}
+  <p>Записей нет.</p>
+{% endfor %}
+{% include "insurance/_pagination.html" %}
+{% endblock %}

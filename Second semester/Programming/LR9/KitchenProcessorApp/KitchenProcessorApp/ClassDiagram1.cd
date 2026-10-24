@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KitchenProcessorApp.Abstract.KitchenProcessor">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAQAAAAAAEAAAQAAAAACAAA=</HashCode>
+      <FileName>Abstract\KitchenProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KitchenProcessorApp.Builder.DesktopProcessorBuilder">
+    <Position X="10.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAEgAAAAAAAQgAAAAA=</HashCode>
+      <FileName>Builder\DesktopProcessorBuilder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KitchenProcessorApp.Builder.HandProcessorBuilder" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAEgAAAAAAAQgAAAAA=</HashCode>
+      <FileName>Builder\HandProcessorBuilder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KitchenProcessorApp.Functions.Grinder">
+    <Position X="8.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Functions\Grinder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KitchenProcessorApp.Functions.MeatGrinder">
+    <Position X="6.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Functions\MeatGrinder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KitchenProcessorApp.Functions.Shredder">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Functions\Shredder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KitchenProcessorApp.Models.DesktopProcessor" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\DesktopProcessor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="KitchenProcessorApp.Models.HandProcessor" Collapsed="true">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAA=</HashCode>
+      <FileName>Models\HandProcessor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="KitchenProcessorApp.Abstract.IBlender">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract\IBlender.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="KitchenProcessorApp.Abstract.IDoughKneader">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Abstract\IDoughKneader.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="KitchenProcessorApp.Abstract.IMixer">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract\IMixer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="KitchenProcessorApp.Abstract.IProcessorFunction">
+    <Position X="5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Abstract\IProcessorFunction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="KitchenProcessorApp.Builder.IProcessorBuilder">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAQgAAAAA=</HashCode>
+      <FileName>Builder\IProcessorBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

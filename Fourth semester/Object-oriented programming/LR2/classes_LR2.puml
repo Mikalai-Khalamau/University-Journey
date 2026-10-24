@@ -1,0 +1,213 @@
+@startuml classes_LR2
+set namespaceSeparator none
+class "AcademicRank" as LR2.AcademicRank.AcademicRank {
+  name
+}
+class "AcademyBuilding" as LR2.AcademyBuilding.AcademyBuilding {
+  departments
+  number
+  staff
+  add_department(department)
+  add_staff(staff)
+  dismiss_all_staff()
+  get_building_type()
+  get_contact_info()
+  get_occupancy_info()
+  has_department(department)
+  has_staff(staff)
+  is_understaffed(threshold)
+  remove_department(department)
+  remove_staff(staff)
+}
+class "Building" as LR2.Building.Building {
+  address
+  name
+  {abstract}get_building_type()
+  {abstract}get_contact_info()
+  {abstract}get_occupancy_info()
+  rename_building(new_name)
+}
+class "Department" as LR2.Department.Department {
+  building
+  faculty_name
+  head
+  name
+  teachers
+  add_teacher(teacher)
+  change_head(new_head_name)
+  get_teacher_count_by_rank(rank)
+  has_teacher(teacher)
+  merge_with(other_department)
+  remove_teacher(teacher)
+}
+class "Discipline" as LR2.Discipline.Discipline {
+  hours
+  name
+  teachers
+  add_teacher(teacher)
+  assign_teacher(teacher)
+  get_weekly_hours()
+  has_teacher(teacher)
+  is_heavyload()
+  remove_teacher(teacher)
+}
+class "Dormitory" as LR2.Dormitory.Dormitory {
+  capacity
+  number
+  staff
+  students
+  add_staff(staff)
+  add_student(student)
+  expand_capacity(additional_places)
+  get_building_type()
+  get_contact_info()
+  get_occupancy_info()
+  get_occupancy_rate()
+  has_staff(staff)
+  has_student(student)
+  remove_staff(staff)
+  remove_student(student)
+}
+class "Faculty" as LR2.Faculty.Faculty {
+  building
+  dean
+  departments
+  name
+  specialities
+  add_department(department)
+  add_speciality(speciality)
+  get_average_gpa()
+  get_total_students()
+  has_department(department)
+  has_speciality(speciality)
+  open_department_in_building(department, building)
+  provide_dormitory(student, dormitory)
+  relocate_to_building(building)
+  remove_department(department)
+  remove_speciality(speciality)
+}
+class "Group" as LR2.Group.Group {
+  disciplines
+  number
+  speciality_name
+  students
+  add_discipline(discipline)
+  add_student(student)
+  get_average_gpa()
+  get_students_count()
+  has_discipline(discipline)
+  has_student(student)
+  remove_discipline(discipline)
+  remove_student(student)
+}
+class "Person" as LR2.Person.Person {
+  name
+  passport_details
+  telephone_number
+  {abstract}get_contact_info()
+  {abstract}get_role_description()
+  update_contact_info(telephone_number, email)
+}
+class "Rectorate" as LR2.Rectorate.Rectorate {
+  bonuses_awarded
+  name
+  rector
+  scholarships_awarded
+  staff
+  universities
+  vice_rectors
+  add_staff(staff_member)
+  add_university(university)
+  appoint_vice_rector(vice_rector)
+  award(entity)
+  consolidate_dormitories()
+  dismiss_vice_rector(vice_rector)
+  generate_report()
+  get_all_university_buildings()
+  get_all_university_staff()
+  get_total_students()
+  remove_staff(staff_member)
+  remove_university(university)
+}
+class "ResidencePlace" as LR2.ResidencePlace.ResidencePlace {
+  name
+}
+class "Speciality" as LR2.Speciality.Speciality {
+  duration_years
+  faculty_name
+  groups
+  name
+  add_disciplines_to_group(group, disciplines)
+  add_group(group)
+  get_total_students()
+  has_group(group)
+  remove_group(group)
+}
+class "Staff" as LR2.Staff.Staff {
+  current_building
+  current_dormitory
+  role
+  salary
+  assign_to_building(building)
+  assign_to_dormitory(dormitory)
+  get_annual_salary()
+  get_contact_info()
+  get_role_description()
+  increase_salary_if_short_staffed(building, threshold)
+}
+class "Student" as LR2.Student.Student {
+  course
+  disciplines
+  dormitory
+  education_form
+  gpa
+  group
+  residence_place
+  add_discipline(discipline)
+  add_grade(discipline, grade)
+  assign_to_group(group)
+  check_in_dormitory(dormitory)
+  get_contact_info()
+  get_grades()
+  get_role_description()
+  has_discipline(discipline)
+  leave_dormitory()
+  remove_discipline(discipline)
+  remove_from_group()
+  transfer_to_group(new_group)
+}
+class "Teacher" as LR2.Teacher.Teacher {
+  academic_rank
+  department
+  disciplines
+  add_discipline(discipline)
+  assign_to_department(department)
+  get_contact_info()
+  get_role_description()
+  grade_student(student, discipline, grade)
+  has_discipline(discipline)
+  promote_student(student)
+  remove_discipline(discipline)
+}
+class "University" as LR2.University.University {
+  buildings
+  dormitories
+  faculties
+  name
+  rectorate
+  add_building(building)
+  add_dormitory(dormitory)
+  add_faculty(faculty)
+  filter_entities(entity_type, predicate)
+  find_entities_by_type(entity_type)
+  generate_university_report()
+  get_average_gpa()
+  get_total_staff()
+  get_total_students()
+}
+LR2.AcademyBuilding.AcademyBuilding --|> LR2.Building.Building
+LR2.Dormitory.Dormitory --|> LR2.Building.Building
+LR2.Staff.Staff --|> LR2.Person.Person
+LR2.Student.Student --|> LR2.Person.Person
+LR2.Teacher.Teacher --|> LR2.Person.Person
+@enduml

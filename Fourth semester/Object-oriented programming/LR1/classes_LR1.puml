@@ -1,0 +1,148 @@
+@startuml classes_LR1
+set namespaceSeparator none
+
+class "AcademyBuilding" as LR1.AcademyBuilding.AcademyBuilding {
+  address : str
+  departments : List[str]
+  name : str
+  number : int
+  staff : List[str]
+  telephone_number : str
+  add_department(department_name: str) -> bool
+  add_staff(staff_name: str) -> bool
+  is_understaffed(threshold: int) -> bool
+  remove_department(department_name: str) -> bool
+  remove_staff(staff_name: str) -> bool
+  rename_building(new_name: str) -> bool
+}
+
+class "Department" as LR1.Department.Department {
+  head : str
+  name : str
+  teachers : List[str]
+  add_teacher(teacher_name: str) -> bool
+  change_head(new_head_name: str) -> bool
+  merge_with(other_department_name: str) -> str
+  remove_teacher(teacher_name: str) -> bool
+}
+
+class "Discipline" as LR1.Discipline.Discipline {
+  hours : int
+  name : str
+  teachers : List[str]
+  add_teacher(teacher_name: str) -> bool
+  assign_teacher(teacher: Teacher) -> bool
+  is_heavyload() -> bool
+  remove_teacher(teacher_name: str) -> bool
+}
+
+class "Dormitory" as LR1.Dormitory.Dormitory {
+  address : str
+  capacity : int
+  name : str
+  number : int
+  staff : List[str]
+  students : List[str]
+  telephone_number : str
+  add_student(student_name: str) -> bool
+  expand_capacity(additional_places: int) -> bool
+  fire_staff(staff_name: str) -> bool
+  hire_staff(staff_name: str) -> bool
+  remove_student(student_name: str) -> bool
+}
+
+class "Faculty" as LR1.Faculty.Faculty {
+  building_number : int
+  dean : str
+  departments : List[str]
+  name : str
+  specialities : List[str]
+  add_speciality(speciality_name: str) -> bool
+  open_department_in_building(department_name: str, building: AcademyBuilding) -> bool
+  provide_dormitory(student: Student, dormitory: Dormitory) -> bool
+  relocate_to_building(building: AcademyBuilding) -> bool
+  remove_speciality(speciality_name: str) -> bool
+}
+
+class "Group" as LR1.Group.Group {
+  disciplines : List[str]
+  number : int
+  speciality : str
+  students : List[str]
+  add_discipline(discipline: str) -> bool
+  add_student(student_name: str) -> bool
+  remove_discipline(discipline: str) -> bool
+  remove_student(student_name: str) -> bool
+}
+
+class "Rectorate" as LR1.Rectorate.Rectorate {
+  bonuses_awarded : int
+  rector : str
+  scholarships_awarded : int
+  vice_rectors : list
+  appoint_vice_rector(vice_rector: str) -> bool
+  award_bonus(teacher: Teacher) -> bool
+  award_scholarship(student: Student) -> bool
+  dismiss_vice_rector(vice_rector: str) -> bool
+}
+
+class "Speciality" as LR1.Speciality.Speciality {
+  duration_years : int
+  faculty : str
+  groups : List[int]
+  name : str
+  add_disciplines_to_group(group: Group, disciplines: List[str]) -> int
+  add_group(group_number) -> bool
+  remove_group(group_number: int) -> bool
+}
+
+class "Staff" as LR1.Staff.Staff {
+  age : int
+  name : str
+  role : str
+  salary : float
+  get_annual_salary() -> float
+  increase_salary_if_short_staffed(building: AcademyBuilding, threshold: int) -> bool
+}
+
+class "Student" as LR1.Student.Student {
+  age : int
+  course : int
+  dormitory_number : NoneType, int
+  gpa : float
+  group_number : int
+  name : str
+  add_grade(discipline: str, grade) -> bool
+  check_in_dormitory(dorm_number: int) -> bool
+  leave_dormitory() -> bool
+  transfer_to_group(new_group_number: int) -> bool
+}
+
+class "Teacher" as LR1.Teacher.Teacher {
+  VALID_RANKS : list
+  academic_rank : str
+  age : int
+  department : str
+  disciplines : List[str]
+  name : str
+  assign_discipline(discipline: str) -> bool
+  grade_student(student: Student, discipline: str, grade: float) -> bool
+}
+
+LR1.Teacher.Teacher --> LR1.Student.Student : ставит оценку
+LR1.Discipline.Discipline --> LR1.Teacher.Teacher : назначает преподавателя
+LR1.Speciality.Speciality --> LR1.Group.Group : добавляет дисциплины
+LR1.Faculty.Faculty --> LR1.Dormitory.Dormitory : предоставляет общежитие
+LR1.Faculty.Faculty --> LR1.AcademyBuilding.AcademyBuilding : открывает кафедру
+LR1.Rectorate.Rectorate --> LR1.Student.Student : выдает стипендию
+LR1.Rectorate.Rectorate --> LR1.Teacher.Teacher : выдает премию
+LR1.Staff.Staff --> LR1.AcademyBuilding.AcademyBuilding : увеличивает зарплату
+
+LR1.Faculty.Faculty --> LR1.Speciality.Speciality : управляет
+LR1.Speciality.Speciality --> LR1.Group.Group : формирует
+LR1.Department.Department --> LR1.Teacher.Teacher : нанимает
+LR1.Student.Student --> LR1.Dormitory.Dormitory : заселяется
+LR1.Dormitory.Dormitory --> LR1.Staff.Staff : нанимает
+LR1.AcademyBuilding.AcademyBuilding --> LR1.Department.Department : размещает
+LR1.AcademyBuilding.AcademyBuilding --> LR1.Staff.Staff : обслуживается
+@enduml

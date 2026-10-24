@@ -1,0 +1,24 @@
+{% extends "insurance/base.html" %}
+{% load static insurance_extras %}
+{% block title %}{{ article.title }} — Новости{% endblock %}
+{% block content %}
+<article>
+  <h1>{{ article.title }}</h1>
+  <p><time datetime="{{ article.published_at|date:'Y-m-d' }}"><strong>Опубликовано:</strong> {{ article.published_at|date:"d/m/Y H:i" }}</time></p>
+  
+  <figure>
+    <img src="{% picture_src article.image_url 'insurance/images/news_1.svg' %}" alt="{{ article.title }}" width="640" height="320">
+    <figcaption>Иллюстрация к новости: {{ article.title }}</figcaption>
+  </figure>
+
+  <p><strong>Резюме:</strong> <mark>{{ article.summary }}</mark></p>
+  
+  <div class="article-body article-columns article-top">
+    {{ article.body|linebreaks }}
+  </div>
+</article>
+
+<p class="actions-row">
+  <a class="btn" href="{% url 'insurance:news-list' %}">← Назад к списку новостей</a>
+</p>
+{% endblock %}

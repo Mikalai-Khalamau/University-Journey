@@ -1,0 +1,58 @@
+@inject IDataService DataService
+@implements IDisposable
+
+@if (DataService.Dishes.Count == 0)
+{
+    @if (DataService.Success)
+    {
+        <p class="text-muted">В выбранной категории нет объектов.</p>
+    }
+    else if (string.IsNullOrEmpty(DataService.ErrorMessage))
+    {
+        <p class="text-muted">Загрузка списка камней...</p>
+    }
+}
+else
+{
+    <div class="list-group shadow-sm">
+        @foreach (var dish in DataService.Dishes)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center gap-2 @(SelectedDishId == dish.Id ? "active" : "")">
+                <span>@dish.Name</span>
+                <button type="button"
+                        class="btn btn-sm @(SelectedDishId == dish.Id ? "btn-light" : "btn-outline-primary")"
+                        @onclick="() => SelectDish(dish.Id)">
+                    Подробно
+                </button>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<int> DishSelected { get; set; }
+
+    [Parameter]
+    public int? SelectedDishId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        DataService.DataLoaded += OnDataLoaded;
+    }
+
+    private void OnDataLoaded()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private Task SelectDish(int id)
+    {
+        return DishSelected.InvokeAsync(id);
+    }
+
+    public void Dispose()
+    {
+        DataService.DataLoaded -= OnDataLoaded;
+    }
+}

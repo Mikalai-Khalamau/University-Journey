@@ -1,0 +1,18 @@
+{% extends "insurance/base.html" %}
+{% block title %}Вход{% endblock %}
+{% block content %}
+<h1>Вход</h1>
+{% if form.errors %}
+  <p style="color:red;">Неверное имя пользователя или пароль.</p>
+{% endif %}
+{% if next %}
+  <p>Чтобы открыть страницу, войдите под своей учётной записью.</p>
+{% endif %}
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  {{ form.as_p }}
+  <p><button type="submit">Войти</button></p>
+</form>
+<p>Нет аккаунта? <a href="{% url 'insurance:register' %}">Регистрация</a></p>
+{% endblock %}

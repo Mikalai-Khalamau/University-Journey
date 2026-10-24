@@ -1,0 +1,11 @@
+{% extends "insurance/base.html" %}
+{% block content %}
+<h1>{{ insured_object.get_object_type_display }}</h1>
+<p>{{ insured_object.description }}</p>
+<p><strong>Оценка стоимости:</strong> {{ insured_object.value }}</p>
+<p>
+  <a href="{% url 'insurance:insuredobject-update' insured_object.pk %}">Изменить</a>
+  <a href="{% url 'insurance:insuredobject-delete' insured_object.pk %}">Удалить</a>
+  <a href="{% url 'insurance:insuredobject-list' %}">К списку</a>
+</p>
+{% endblock %}

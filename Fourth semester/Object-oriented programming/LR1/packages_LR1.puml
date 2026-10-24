@@ -1,0 +1,49 @@
+@startuml packages_LR1
+set namespaceSeparator none
+package "LR1" as LR1 {
+}
+package "LR1.AcademyBuilding" as LR1.AcademyBuilding {
+}
+package "LR1.Department" as LR1.Department {
+}
+package "LR1.Discipline" as LR1.Discipline {
+}
+package "LR1.Dormitory" as LR1.Dormitory {
+}
+package "LR1.Faculty" as LR1.Faculty {
+}
+package "LR1.Group" as LR1.Group {
+}
+package "LR1.Rectorate" as LR1.Rectorate {
+}
+package "LR1.Speciality" as LR1.Speciality {
+}
+package "LR1.Staff" as LR1.Staff {
+}
+package "LR1.Student" as LR1.Student {
+}
+package "LR1.Teacher" as LR1.Teacher {
+}
+package "LR1.main" as LR1.main {
+}
+LR1.Discipline --> LR1.Teacher
+LR1.Faculty --> LR1.AcademyBuilding
+LR1.Faculty --> LR1.Dormitory
+LR1.Faculty --> LR1.Student
+LR1.Rectorate --> LR1.Student
+LR1.Rectorate --> LR1.Teacher
+LR1.Speciality --> LR1.Group
+LR1.Staff --> LR1.AcademyBuilding
+LR1.Teacher --> LR1.Student
+LR1.main --> LR1.AcademyBuilding
+LR1.main --> LR1.Department
+LR1.main --> LR1.Discipline
+LR1.main --> LR1.Dormitory
+LR1.main --> LR1.Faculty
+LR1.main --> LR1.Group
+LR1.main --> LR1.Rectorate
+LR1.main --> LR1.Speciality
+LR1.main --> LR1.Staff
+LR1.main --> LR1.Student
+LR1.main --> LR1.Teacher
+@enduml

@@ -1,0 +1,29 @@
+.chat-panel {
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: .5rem;
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: .25rem;
+}
+
+.chat-message {
+    padding: .5rem .65rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.chat-author {
+    color: #0d6efd;
+}
+
+.chat-text {
+    word-break: break-word;
+}
